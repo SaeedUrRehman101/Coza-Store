@@ -67,27 +67,27 @@ include ("connection.php");
 
                 <div class="btn-group" role="group" data-bs-toggle="buttons">
                     <label class="btn btn-primary active">
-                        <input type="checkbox" class="me-2" name="days" id="" checked autocomplete="off" />
+                        <input type="checkbox" value="monday" class="me-2" name="days" id="" checked autocomplete="off" />
                         Monday
                     </label>
                     <label class="btn btn-primary">
-                        <input type="checkbox" class="me-2" name="days" id="" autocomplete="off" />
+                        <input type="checkbox" value="tuesday" class="me-2" name="days" id="" autocomplete="off" />
                         Tuesday
                     </label>
                     <label class="btn btn-primary">
-                        <input type="checkbox" class="me-2" name="days" id="" autocomplete="off" />
+                        <input type="checkbox" value="wednesday" class="me-2" name="days" id="" autocomplete="off" />
                         Wednesday
                     </label>
                     <label class="btn btn-primary">
-                        <input type="checkbox" class="me-2" name="days" id="" autocomplete="off" />
+                        <input type="checkbox" value="thursday" class="me-2" name="days" id="" autocomplete="off" />
                         Thursday
                     </label>
                     <label class="btn btn-primary">
-                        <input type="checkbox" class="me-2" name="days" id="" autocomplete="off" />
+                        <input type="checkbox" value="friday" class="me-2" name="days" id="" autocomplete="off" />
                         Friday
                     </label>
                     <label class="btn btn-primary">
-                        <input type="checkbox" class="me-2" name="days" id="" autocomplete="off" />
+                        <input type="checkbox" value="saturday" class="me-2" name="days" id="" autocomplete="off" />
                         Saturday
                     </label>
                 </div>

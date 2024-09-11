@@ -16,7 +16,7 @@ include ("connection.php");
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
 </head>
 
-<body>
+<body class="bg-secondary">
 
     <div class="container">
         <div class="table-responsive text-center mt-4">
@@ -32,6 +32,7 @@ include ("connection.php");
                         <th scope="col">Monthly Fees</th>
                         <th scope="col">Days</th>
                         <th scope="col">Slots</th>
+                        <th colspan="2">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,7 +42,7 @@ include ("connection.php");
                     $result=$sql->fetchAll(PDO::FETCH_ASSOC);
 
                     foreach($result as $values){
-
+                        
                         ?>
 
                     <tr class="">
@@ -54,13 +55,21 @@ include ("connection.php");
                         <td><?php echo $values['Monthly_fees'] ?></td>
                         <td><?php echo $values['Days'] ?></td>
                         <td><?php echo $values['slots'] ?></td>
+                        <td><a href="update.php?id=<?php echo $values['id'] ?>" class="btn btn-primary">Update</a></td>
+                        <td><a href="?delid=<?php echo $values['id'] ?>" class="btn btn-primary">Delet</a></td>
                     </tr>
 
-
-
-
                         <?php
+                    }
 
+                    if(isset($_GET['delid'])){
+                        $id=$_GET['delid'];
+                        $query=$run->prepare('delete from stddetail where id = :stdid');
+                        $query->bindParam('stdid',$id);
+                        $query->execute();
+                        echo "<script>alert('Data deleted Successfully.');
+                        location.assign('table.php');
+                        </script>";
                     }
 
                     ?>
