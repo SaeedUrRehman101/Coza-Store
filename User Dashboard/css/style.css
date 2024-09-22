@@ -34,6 +34,10 @@
     transition: .5s;
 }
 
+.form-text{
+    color: red !important;
+}
+
 .btn.btn-primary {
     color: #FFFFFF;
 }
