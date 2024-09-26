@@ -65,7 +65,7 @@ if(isset($_POST['updateCategory'])){
     // }
 
     else{
-        if($categoryImageChanged){ //if the suer updated the image then this condition will be ture
+        if($categoryImageChanged){ //if the uer updated the image then this condition will be ture
             $categoryTemImage =$_FILES['cateImage']['tmp_name'];
             $extension = pathinfo($categoryImageName,PATHINFO_EXTENSION);
             $filePath ='img/category/'.$categoryImageName;
