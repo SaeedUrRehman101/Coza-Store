@@ -10,31 +10,62 @@ include('components/header.php')
                         <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">First Name</th>
-                                        <th scope="col">Last Name</th>
-                                        <th scope="col">Email</th>
+                                        <th scope="col">Category ID</th>
+                                        <th scope="col">Category Name</th>
+                                        <th scope="col">Category Image</th>
+                                        <th class="" scope="col" colspan="2">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+
+                                <?php
+                                $query=$run->query('select * from categories');
+                                $row=$query->fetchAll(PDO::FETCH_ASSOC);
+                                foreach($row as $cate){
+                                ?>
                                     <tr>
-                                        <th scope="row">1</th>
-                                        <td>John</td>
-                                        <td>Doe</td>
-                                        <td>jhon@email.com</td>
+                                        <th scope="row"><?php echo $cate['id']?></th>
+                                        <td><?php echo $cate['Category_Name']?></td>
+                                        <td><img src="<?php echo $Cate_ImageAddress.$cate['Category_Image'] ?>" alt="<?php echo $cate['Category_Name'] ?>" width="80"></td>
+                                        <td><a href="#updatemodl<?php echo $cate['id'] ?>" data-bs-toggle="modal"><i class="far fa-edit" style="color: #74C0FC;"></i></a></td>
+                                        <td><a href="?cateDelid=<?php echo $cate['id'] ?>"><i class="fas fa-trash" style="color:red;"></i></a></td>
                                     </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>mark@email.com</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>jacob@email.com</td>
-                                    </tr>
+
+                                    <!--Update Category Modal -->
+            <div class="modal fade" id="updatemodl<?php echo $cate['id'] ?>" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel"><?php echo $cate['Category_Name'] ?></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <form method="post" enctype="multipart/form-data">
+                <input type="hidden" name="cateId" value="<?php echo $cate['id'] ?>">
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Category Name</label>
+                                    <input type="text" class="form-control" name="cateName" id="exampleInputEmail1"
+                                        aria-describedby="emailHelp" value="<?php echo $cate['Category_Name'] ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Choose file</label>
+                                    <input type="file" class="form-control" name="cateImage">
+                                    <img src="<?php echo $Cate_ImageAddress.$cate["Category_Image"] ?>" alt="<?php echo $cate['Category_Name'] ?>" width="80">
+                                </div>
+                                <div class="modal-footer">
+                                <button type="submit" name="updateCategory" class="btn btn-primary">Update Category</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+
+                            </form>
+                </div>
+                </div>
+            </div>
+            </div>
+
+                                    <?php
+                                    }
+                                    ?>
                                 </tbody>
                             </table>
                     </div>
@@ -44,7 +75,7 @@ include('components/header.php')
 
             <div class="d-flex col-lg-12 justify-content-end mt-3"><button type="button" name="" class="btn btn-primary me-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Categories</button></div>
             
-            <!-- Modal -->
+            <!--Add Category Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -58,16 +89,12 @@ include('components/header.php')
                                     <label for="exampleInputEmail1" class="form-label">Category Name</label>
                                     <input type="text" class="form-control" name="cateName" id="exampleInputEmail1"
                                         aria-describedby="emailHelp">
-                                    <div id="emailHelp" class="form-text"><?php if(!empty($error_msg)){ // agr error_msg ka variable khali nhi hai is ka mtlb ye hai
-                                        echo $error_msg;
-                                    } ?></div>
+                                    <div id="emailHelp" class="form-text"><?php echo $error_Name; ?></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="" class="form-label">Choose file</label>
-                                    <input type="file" class="form-control" name="cateImage" id="" placeholder="" aria-describedby="fileHelpId" />
-                                    <div id="fileHelpId" class="form-text"><?php if(!empty($eroor_msg)){
-                                        echo $error_msg;
-                                    } ?></div>
+                                    <input type="file" class="form-control" name="cateImage" id="" placeholder="" aria-describedby="fileHelpId">
+                                    <div id="fileHelpId" class="form-text"><?php echo $error_Img ;?></div>
                                 </div>
                                 <button type="submit" name="addCategory" class="btn btn-primary">Add Category</button>
                             </form>
