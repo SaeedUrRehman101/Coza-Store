@@ -67,7 +67,8 @@ include('php/query.php');
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Category</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="category.php" class="dropdown-item">Buttons</a>
+                            <a href="category.php" class="dropdown-item">Category</a>
+                            <a href="product.php" class="dropdown-item">Products</a>
                             <a href="typography.html" class="dropdown-item">Typography</a>
                             <a href="element.html" class="dropdown-item">Other Elements</a>
                         </div>

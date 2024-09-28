@@ -7,13 +7,13 @@ include('components/header.php')
                 <div class="row bg-light rounded mx-0">
                     <div class="col-md-12">
                         <h3 class="px-3 py-4">All Categories</h3>
-                        <table class="table">
+                        <table class="table table-bordered text-center">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Category ID</th>
-                                        <th scope="col">Category Name</th>
-                                        <th scope="col">Category Image</th>
-                                        <th class="" scope="col" colspan="2">Actions</th>
+                                        <th scope="col" class="fw-medium fst-italic">Category ID</th>
+                                        <th scope="col" class="fw-medium fst-italic">Category Name</th>
+                                        <th scope="col" class="fw-medium fst-italic">Category Image</th>
+                                        <th scope="col" class="fw-medium fst-italic" colspan="2">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
