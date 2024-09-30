@@ -91,7 +91,6 @@ include('components/header.php')
                                     <label for="exampleInputEmail1" class="form-label">Product Category</label>
                                     <select class="form-select" id="floatingSelect"
                                     aria-label="Floating label select example" name="proCatId">
-                                    <!-- <option selected>Open this select menu</option> -->
                                     <?php 
                                     $query = $run->query('select * from categories');
                                     $result = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -134,14 +133,13 @@ include('components/header.php')
 
                                              <!-- Product Category Detail Modal -->
 
-                                            <?php
-                                            $query=$run->prepare('select p.Product_Id,p.Product_Name,c.id,c.Category_Name from products p inner join categories c on p.Product_CatId = c.Id where p.Product_Id= :pid');
-                                        $query->bindParam('pid',$proCate['Product_Id']);
-                                        $query->execute();
-                                        $category = $query->fetchAll(PDO::FETCH_ASSOC);
-                                        foreach($category as $cate){
-                                            ?>
-                                             <div class="modal fade" id="proCategorydetail<?php echo $proCate['Product_Id'] ?>" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <?php
+                            $query = $run->query('select * from products');
+                            $query->execute();
+                            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+                            foreach($result as $proCate){
+                        ?>
+                            <div class="modal fade" id="proCategorydetail<?php echo $proCate['Product_Id'] ?>" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -149,14 +147,9 @@ include('components/header.php')
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                               
                                 <div class="row">
-                                <div
-                                    class="table-responsive"
-                                >
-                                    <table
-                                       class="table text-center table-bordered"
-                                    >
+                                <div class="table-responsive">
+                                    <table class="table text-center table-bordered">
                                         <thead>
                                             <tr>
                                                 <th class="text-light-emphasis fw-medium fst-italic">Category Id</th>
@@ -164,12 +157,19 @@ include('components/header.php')
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="">
-                                                <td><?php echo $cate['id'] ?></td>
-                                                <td><?php echo $cate['Category_Name'] ?></td>
-                                                <?php
-                                             } 
-                                             ?>
+                                            <tr>
+                                                <?php 
+                                                    $query=$run->prepare('select c.id,c.Category_Name from products p inner join categories c on p.Product_CatId = c.Id where p.Product_Id= :pid');
+                                                    $query->bindParam('pid',$proCate['Product_Id']);
+                                                    $query->execute();
+                                                    $category = $query->fetchAll(PDO::FETCH_ASSOC);
+                                                    foreach($category as $cate){
+                                                ?>
+                                                    <td><?php echo $cate['id'] ?></td>
+                                                    <td><?php echo $cate['Category_Name'] ?></td>
+                                                <?php 
+                                                }
+                                                ?>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -179,10 +179,12 @@ include('components/header.php')
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
                             </div>
-                                
                         </div>
                     </div>
                 </div>
+                                        <?php
+                                            } 
+                                        ?>
 
             <!-- Blank End -->
 
