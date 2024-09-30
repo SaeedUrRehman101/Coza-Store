@@ -33,14 +33,14 @@ include('components/header.php')
                                         <td><?php echo $proCate['Product_Description']?></td>
                                         <td><img src="<?php echo $Pro_ImageAddress.$proCate['Product_Image'] ?>" alt="<?php echo $proCate['Product_Name'] ?>" width="80"></td>
                                         <!-- <td><?php //echo $proCate['Product_CatId']?></td> -->
-                                        <td><?php 
-                                        $query=$run->prepare('select c.Category_Name from products p inner join categories c on p.Product_CatId = c.Id where p.Product_Id= :pid');
+                                        <!-- <td><?php 
+                                        /*$query=$run->prepare('select c.Category_Name from products p inner join categories c on p.Product_CatId = c.Id where p.Product_Id= :pid');
                                         $query->bindParam('pid',$proCate['Product_Id']);
                                         $query->execute();
                                         $category = $query->fetch(PDO::FETCH_ASSOC);
-                                        echo $category['Category_Name'];
-                                        ?></td>
-                                        <!-- <td><a href="#proCategorydetail<?php //echo $proCate['Product_Id'] ?>" data-bs-toggle="modal">Click Here</a></td> -->
+                                        echo $category['Category_Name'];*/
+                                        ?></td> -->
+                                        <td><a href="#proCategorydetail<?php echo $proCate['Product_Id'] ?>" data-bs-toggle="modal">Click Here</a></td>
                                         <td><a href="#updatePromodl<?php echo $proCate['Product_Id'] ?>" data-bs-toggle="modal"><i class="far fa-edit" style="color: #74C0FC;"></i></a></td>
                                         <td><a href="?proCateDelid=<?php echo $proCate['Product_Id'] ?>"><i class="fas fa-trash" style="color:red;"></i></a></td>
                                     </tr>
@@ -122,32 +122,68 @@ include('components/header.php')
                 </div>
             </div>
             </div>
-
-                                            <!-- Product Category Detail Modal -->
-                <div class="modal fade" id="proCategorydetail<?php echo $proCate['Product_Id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                            </div>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                                    <?php
+            <?php
                                     }
                                     ?>
+                                   
                                 </tbody>
                             </table>
                     </div>
                 </div>
             </div>
+
+                                             <!-- Product Category Detail Modal -->
+
+                                            <?php
+                                            $query=$run->prepare('select p.Product_Id,p.Product_Name,c.id,c.Category_Name from products p inner join categories c on p.Product_CatId = c.Id where p.Product_Id= :pid');
+                                        $query->bindParam('pid',$proCate['Product_Id']);
+                                        $query->execute();
+                                        $category = $query->fetchAll(PDO::FETCH_ASSOC);
+                                        foreach($category as $cate){
+                                            ?>
+                                             <div class="modal fade" id="proCategorydetail<?php echo $proCate['Product_Id'] ?>" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel"><?php echo $proCate['Product_Name'] ?></h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                               
+                                <div class="row">
+                                <div
+                                    class="table-responsive"
+                                >
+                                    <table
+                                       class="table text-center table-bordered"
+                                    >
+                                        <thead>
+                                            <tr>
+                                                <th class="text-light-emphasis fw-medium fst-italic">Category Id</th>
+                                                <th class="text-light-emphasis fw-medium fst-italic">Category Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="">
+                                                <td><?php echo $cate['id'] ?></td>
+                                                <td><?php echo $cate['Category_Name'] ?></td>
+                                                <?php
+                                             } 
+                                             ?>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                                
+                        </div>
+                    </div>
+                </div>
+
             <!-- Blank End -->
 
             <div class="d-flex col-lg-12 justify-content-end mt-3"><button type="button" name="" class="btn btn-primary me-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Add  Product Categories</button></div>
