@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 26, 2024 at 07:32 PM
+-- Generation Time: Sep 30, 2024 at 12:35 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -31,11 +31,22 @@ CREATE TABLE `products` (
   `Product_Id` int(11) NOT NULL,
   `Product_Name` varchar(25) NOT NULL,
   `Product_Price` int(11) NOT NULL,
-  `Product_Qunatity` int(11) NOT NULL,
+  `Product_Quantity` int(11) NOT NULL,
   `Product_Description` varchar(100) NOT NULL,
   `Product_Image` varchar(50) NOT NULL,
   `Product_CatId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`Product_Id`, `Product_Name`, `Product_Price`, `Product_Quantity`, `Product_Description`, `Product_Image`, `Product_CatId`) VALUES
+(12, 'food', 5000, 12, 'any nutritious substance that people or animals eat or drink or that plants absorb in order to maint', 'banner(3).jpg', 15),
+(13, 'food', 5000, 12, 'any nutritious substance that people or animals eat or drink or that plants absorb in order to maint', 'Boss-1 (1).jpg', 12),
+(14, 'food Eating', 5000, 12, 'any nutritious substance that people or animals eat or drink or that plants absorb in order to maint', 'Silver Tufted.jpg', 12),
+(15, 'food Eating', 345000, 12, 'any nutritious substance that people or animals eat or drink or that plants absorb in order to maint', 'banner.jpg', 16),
+(16, 'food Eating', 345000, 12, 'any nutritious substance that people or animals eat or drink or that plants absorb in order to maint', 'about2.jpg', 16);
 
 --
 -- Indexes for dumped tables
@@ -56,7 +67,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `Product_Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Product_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Constraints for dumped tables
