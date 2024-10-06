@@ -1,48 +1,55 @@
 <?php
-session_start();
-$pdo = new PDO('mysql:host=localhost;dbname=registeration_form_data', 'root', '');
-
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    // $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-    $password = $_POST['password'];
-
-
-    $stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
-    $stmt->bindParam(':name', $name);
-    $stmt->bindParam(':email', $email);
-    $stmt->bindParam(':password', $password);
-    $stmt->bindParam(':email', $email);
-
-    if ($stmt->execute()) {
-        $_SESSION['user_name'] = $name;
-        header("Location: profile.php");
-        exit();
-    } else {
-        echo "Registration failed.";
-    }
-}
+include("components/header.php");
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-</head>
-<body>
-    <h2>Register</h2>
-    <form method="POST" action="">
-        <label>Name:</label>
-        <input type="text" name="name" required><br>
-        <label>Email:</label>
-        <input type="email" name="email" required><br>
-        <label>Password:</label>
-        <input type="password" name="password" required><br>
-        <button type="submit">Register</button>
-    </form>
-</body>
-</html>
+	<!-- Title page -->
+	<section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('images/blog-03.jpg');">
+		<h2 class="ltext-105 cl0 txt-center">
+			Sign Up
+		</h2>
+	</section>	
+
+
+	<!-- Content page -->
+	<section class="bg0 p-t-104 p-b-116">
+		<div class="container">
+			<div class="register">
+				<div class="form-div bor10 p-lr-70 p-t-55 p-b-70 p-lr-15-lg w-full-md">
+					<form method="post">
+						<h4 class="mtext-105 cl2 txt-center p-b-30">
+							Register Your Self
+						</h4>
+
+						<div class="bor8 m-b-20 how-pos4-parent">
+							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="name" placeholder="Your Full Name">
+							<img class="how-pos4 pointer-none" src="images/icons/user.png" alt="ICON">
+						</div>
+
+                        <div class="bor8 m-b-20 how-pos4-parent">
+							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="email" placeholder="Your Email Address">
+							<img class="how-pos4 pointer-none" src="images/icons/email.png" alt="ICON">
+						</div>
+
+                        <div class="bor8 m-b-20 how-pos4-parent">
+							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="phone" placeholder="Your Phone Number">
+							<img class="how-pos4 pointer-none" src="images/icons/phone.png" alt="ICON">
+						</div>
+
+                        <div class="bor8 m-b-20 how-pos4-parent">
+							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="password" placeholder="Your Password">
+							<img class="how-pos4 pointer-none" src="images/icons/password.png" alt="ICON">
+						</div>
+
+						<button type="submit" class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer">
+							Sign Up
+						</button>
+					</form>
+				</div>
+			</div>/
+		</div>
+	</section>	
+
+
+<?php
+include("components/footer.php");
+?>
