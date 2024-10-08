@@ -21,31 +21,44 @@ include("components/header.php");
 						</h4>
 
 						<div class="bor8 m-b-20 how-pos4-parent">
-							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="name" placeholder="Your Full Name">
+							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" id="name" type="text" name="name" placeholder="Your Full Name">
 							<img class="how-pos4 pointer-none" src="images/icons/user.png" alt="ICON">
 						</div>
+						<small style='color : red; font-weight: 600; letter-spacing: .1vw' class="name_error stext-111 cl2 plh3 size-116 p-l-62 p-r-30"><?php echo $name_vali ?></small>
+						<?php 
+							echo $currentUser ? "<div id='fileHelpId' class='stext-111 cl2 plh3 size-116 p-l-62 p-r-30' style='color: red; font-weight: 600; letter-spacing: .1vw'>{$error_name}</div>" : '';
+						?>
 
                         <div class="bor8 m-b-20 how-pos4-parent">
-							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="email" placeholder="Your Email Address">
+							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="email" id="email" name="email" placeholder="Your Email Address">
 							<img class="how-pos4 pointer-none" src="images/icons/email.png" alt="ICON">
 						</div>
-
+						<small style='color : red; font-weight: 600; letter-spacing: .1vw' class="email_error stext-111 cl2 plh3 size-116 p-l-62 p-r-30"><?php echo $email_vali ?></small>
+						<?php
+							echo $currentUser ? "<div id='fileHelpId' class='stext-111 cl2 plh3 size-116 p-l-62 p-r-30' style='color: red; font-weight: 600; letter-spacing: .1vw'>{$error_email}</div>" : '';
+						?>
+					
                         <div class="bor8 m-b-20 how-pos4-parent">
-							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="phone" placeholder="Your Phone Number">
+							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="number" id="phone" name="phone" placeholder="Your Phone Number">
 							<img class="how-pos4 pointer-none" src="images/icons/phone.png" alt="ICON">
 						</div>
-
+						<small style='color : red; font-weight: 600; letter-spacing: .1vw' class="phone_error stext-111 cl2 plh3 size-116 p-l-62 p-r-30"><?php echo $phone_vali ?></small>
+						<?php
+						echo $currentUser ? "<div id='fileHelpId' class='stext-111 cl2 plh3 size-116 p-l-62 p-r-30 ' style='color : red; font-weight : 600; letter-spacing : .1vw'>{$error_Phone}</div>"  : '';
+						?>
+						
                         <div class="bor8 m-b-20 how-pos4-parent">
-							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="password" placeholder="Your Password">
+							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="password" id="password" name="password" placeholder="Your Password">
 							<img class="how-pos4 pointer-none" src="images/icons/password.png" alt="ICON">
 						</div>
+						<small style='color : red; font-weight: 600; letter-spacing: .1vw' class="phone_error stext-111 cl2 plh3 size-116 p-l-62 p-r-30"><?php echo $password_vali ?></small>
 
-						<button type="submit" class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer">
+						<button type="submit" name="signIn" id="register" class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer">
 							Sign Up
 						</button>
 					</form>
 				</div>
-			</div>/
+			</div>
 		</div>
 	</section>	
 
