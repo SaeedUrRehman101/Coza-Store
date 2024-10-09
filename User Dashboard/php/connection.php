@@ -1,4 +1,5 @@
 <?php
+session_start();
 $db_name="mysql:host=localhost;dbname=saeed";
 $username='root';
 $password='';

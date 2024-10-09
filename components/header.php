@@ -108,9 +108,43 @@ include("php/query.php");
 								<a href="contact.html">Contact</a>
 							</li>
 
-                            <li>
-								<a href="register.php">Sign Up</a>
-							</li>
+							<?php
+							 if(isset($_SESSION['Name'])){
+							?>
+								<li>
+									<a href="LogOut.php">LogOut</a>
+								</li>
+
+								<?php
+								if($_SESSION['UserRole']=="User"){
+									?>
+									<li>
+										<a href="UserProfile.php">User Profile</a>
+									</li>
+								<?php
+							 }
+							 ?>
+							 <?php
+							 if($_SESSION['UserRole']=="Admin"){
+								?>
+									<li>
+										<a href="User Dashboard/index.php">Admin Profile</a>
+									</li>
+								<?php
+							 }
+							}
+							 else{
+								?>
+									<li>
+										<a href="SignIn.php">Sign In</a>
+									</li>
+
+									<li>
+										<a href="register.php">Sign Up</a>
+									</li>
+								<?php
+							 }
+							?>
 						</ul>
 					</div>	
 
