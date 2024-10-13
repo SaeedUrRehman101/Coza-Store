@@ -207,6 +207,8 @@
     content: "\f107";
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
+    display: inline-flex !important;
+    align-items: center !important;
     transition: .5s;
 }
 

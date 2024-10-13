@@ -1,5 +1,9 @@
 <?php
 include('php/query.php');
+// include('../php/user.php');
+if($_SESSION['UserRole'] != "Admin"){
+    echo "<script>location.assign('../index.php')</script>";
+}
 ?>
 
 <!DOCTYPE html>
@@ -14,12 +18,13 @@ include('php/query.php');
 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -33,6 +38,7 @@ include('php/query.php');
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 
 <body>
@@ -54,12 +60,39 @@ include('php/query.php');
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                    <?php
+                if($_SESSION['User_Img'] == "Null"){
+                    ?>
+                    <h3 class="bg-info rounded-circle d-flex justify-content-center align-items-center" style="width : 40px !important; height : 40px !important;">
+                        <?php
+                        $query = explode($_SESSION['Name'][0],$_SESSION['Name']);
+                        echo $_SESSION['Name'][0];
+                        ?>
+                    </h3>
+                    <?php
+                }
+                else{
+                    ?>
+                    <img class="rounded-circle" src="<?php echo $user_ImageAddress.$_SESSION["User_Img"] ?>" alt="" style="width: 80px; height: 80px;">
+                    <?php
+                }
+                ?>
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0">Jhon Doe</h6>
-                        <span>Admin</span>
+                        <h6 class="mb-0"><?php echo $_SESSION['Name'] ?></h6>
+                        <?php
+                            if($_SESSION['User_Bio'] == "Null"){
+                                ?>
+                                <span class="text-secondary">Prdouct Designer</span>
+                                <?php
+                            }
+                            else{
+                                ?>
+                                <span class="text-secondary" style="font-size:13px;"><?php echo $_SESSION['User_Bio'] ?></span>
+                                <?php
+                            }
+                        ?>
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
@@ -171,14 +204,30 @@ include('php/query.php');
                         </div>
                     </div>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">John Doe</span>
+                        <a href="#" class="nav-link dropdown-toggle d-flex" data-bs-toggle="dropdown">
+                            <?php
+                                if($_SESSION['User_Img'] == "Null"){
+                                    ?>
+                                    <div class="bg-info rounded-circle d-flex justify-content-center align-items-center" style="width : 40px !important; height : 40px !important;">
+                                        <?php
+                                        $query = explode($_SESSION['Name'][0],$_SESSION['Name']);
+                                        echo $_SESSION['Name'][0];
+                                        ?>
+                                    </div>
+                                    <?php
+                                }
+                                else{
+                                    ?>
+                                    <img class="rounded-circle" src="<?php echo $user_ImageAddress.$_SESSION["User_Img"] ?>" alt="" style="width: 80px; height: 80px;">
+                                    <?php
+                                }
+                            ?>
+                            <div class="d-none d-lg-inline-flex align-items-center"><?php echo $_SESSION['Name'] ?></div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">My Profile</a>
+                            <a href="adminProfile.php" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
+                            <a href="../LogOut.php" class="dropdown-item">Log Out</a>
                         </div>
                     </div>
                 </div>

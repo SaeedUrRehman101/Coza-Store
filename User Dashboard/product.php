@@ -55,7 +55,7 @@ include('components/header.php')
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                <form method="post" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data">
                     <input type="hidden" name="proId" value="<?php echo $proCate['Product_Id'] ?>" id="">
                                 <div class="mb-3">
                                     <label for="exampleInputEmail1" class="form-label">Product Id</label>
@@ -114,9 +114,6 @@ include('components/header.php')
                                 </div>
                                 <button type="submit" name="updateProduct" class="btn btn-primary">Update Product</button>
                             </form>
-
-                    
-
                 </div>
                 </div>
             </div>

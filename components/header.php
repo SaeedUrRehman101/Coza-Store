@@ -128,7 +128,10 @@ include("php/query.php");
 							 if($_SESSION['UserRole']=="Admin"){
 								?>
 									<li>
-										<a href="User Dashboard/index.php">Admin Profile</a>
+										<a href="User Dashboard/index.php">Dashboard</a>
+									</li>
+									<li>
+										<a href="User Dashboard/adminProfile.php">Admin Profile</a>
 									</li>
 								<?php
 							 }

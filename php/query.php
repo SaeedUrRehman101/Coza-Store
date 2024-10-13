@@ -1,5 +1,7 @@
 <?php
 include("User Dashboard/php/connection.php");
+$Cate_ImageAddress='User Dashboard/img/category/';
+$Pro_ImageAddress='User Dashboard/img/products/';
 $error_email = $error_name = $error_Phone = '';
 $name_vali = $email_vali = $phone_vali = $password_vali = '';
 $currentUser = '';
@@ -127,6 +129,8 @@ if(isset($_POST['signIn'])){
             $_SESSION['Phone'] = $result["User_Phone"];
             $_SESSION['Password'] = $result["User_Password"];
             $_SESSION['UserRole'] = $result["User_Role"];
+            $_SESSION['User_Img'] = $result["User_Image"];
+            $_SESSION['User_Bio'] = $result["User_Bio"];
             echo "<script>alert('LogedIn SuccessFully.')</script>";
             if($_SESSION['UserRole'] == "Admin"){
                 echo "<script>location.assign('User Dashboard/Index.php')</script>";
@@ -141,6 +145,7 @@ if(isset($_POST['signIn'])){
         }
     }
 }
+
 ?>
 
         <!-- <-----------------------    preg_match         -------------------------->

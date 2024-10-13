@@ -1,6 +1,7 @@
 <?php
 include('connection.php');
 $Cate_ImageAddress='img/category/';
+$user_ImageAddress = 'img/User/';
 $error_Name=$error_Img='';
 $categoryName=$categoryImageName='';
 
@@ -224,6 +225,83 @@ if(isset($_GET['proCateDelid'])){
     </script>";
 }
 
+// -----------------------------------------------------------------
+
+// Admin Profile;-
+
+
+if(isset($_POST['updateUser'])){
+    $id = $_POST['userId'];
+    $name = $_POST['name'];
+    $phone = $_POST['phone'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $bio = $_POST['bio'];
+    $Img = $_FILES['img']['name'];
+    $userImg = !empty($Img);
+    $userCheckInput = $run->prepare('select User_Name, User_Phone , User_Password , User_Email , User_Bio , User_Image from signin where userId = :uid');
+    $userCheckInput->bindParam('uid',$id);
+    $userCheckInput->execute();
+    $checkInputs = $userCheckInput->fetch(PDO::FETCH_ASSOC);
+    if($checkInputs['User_Password'] == $password && $checkInputs['User_Email'] == $email && $checkInputs['User_Name']==$name && $checkInputs['User_Phone']==$phone && (!$userImg || $checkInputs['User_Image'] == $Img) && $checkInputs['User_Bio'] == $bio){
+        echo "<script>alert('You already set this Data.')</script>";
+    }
+    else{
+        if(!empty($name)){
+            $_SESSION['Name'] = $_POST['name'];
+        }
+        if(!empty($phone)){
+            $_SESSION['Phone'] = $_POST['phone'];
+            // print_r($_POST['phone']);
+        }
+        if(!empty($email)){
+            $_SESSION['Email'] = $_POST['email'];
+        }
+        if(!empty($password) && $password != $checkInputs['User_Password']){
+            $hashPassword = sha1($password);
+            $_SESSION['Password'] = $hashPassword;
+            // echo "SESSION Password: " . $_SESSION['Password'] . "<br>";
+            // echo "Input Password : " . $hashPassword . "<br>";
+        }
+        if(!empty($bio)){
+            $_SESSION['User_Bio'] = $bio;
+        }
+        if($userImg){
+            $_SESSION["User_Img"] = $Img;
+            $tempName = $_FILES['img']['tmp_name'];
+            $extension = pathinfo($Img,PATHINFO_EXTENSION);
+            $filePath = 'img/User/'.$Img;
+            if($extension == 'jpg' || $extension == 'webp' || $extension == 'png' || $extension == 'png' || $extension == 'jpeg'){
+                if(move_uploaded_file($tempName,$filePath)){
+                    $query = $run->prepare('update signin set User_Name = :un, User_Phone = :uph , User_Password = :upass , User_Email = :ue , User_Image = :uImg , User_Bio = :ub where userId = :uid');
+                    $query->bindParam('uid',$id);
+                    $query->bindParam('un',$_SESSION['Name']);
+                    $query->bindParam('uph',$_SESSION['Phone']);
+                    $query->bindParam('upass',$_SESSION['Password']);
+                    $query->bindParam('ue',$_SESSION['Email']);
+                    $query->bindParam('uImg',$_SESSION['User_Img']);
+                    $query->bindParam('ub',$_SESSION['User_Bio']);
+                    $query->execute();
+                    echo '<script>alert("Successfully Updated Your File.")</script>';
+                    // print_r($checkInputs['User_Password']);
+                    // print_r($_SESSION['Password']);
+                }
+            }
+        }
+        else{
+            $query = $run->prepare('update signin set User_Name = :un, User_Phone = :uph , User_Password = :upass , User_Email = :ue , User_Bio = :ub where userId = :uid');
+                    $query->bindParam('uid',$id);
+                    $query->bindParam('un',$_SESSION['Name']);
+                    $query->bindParam('uph',$_SESSION['Phone']);
+                    $query->bindParam('upass',$_SESSION['Password']);
+                    $query->bindParam('ue',$_SESSION['Email']);
+                    $query->bindParam('ub',$_SESSION['User_Bio']);
+                    $query->execute();
+                    echo '<script>alert("Successfully Updated Your File.")</script>';
+        }
+    }
+    
+}
 
 
 
