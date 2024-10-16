@@ -153,12 +153,18 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 	<!-- Modal1 -->
 	<?php
-		$query = $run->query('select * from products');
-		$result = $query->fetchAll(PDO::FETCH_ASSOC);
-		foreach($result as $products){
+	if(isset($_GET['pID'])){
+		$pid = $_GET['pID'];
+		$query = $run->prepare('select * from Products where Product_Id =:pid');
+$query->bindParam('pid',$pid);
+$query->execute();
+		$result = $query->fetch(PDO::FETCH_ASSOC);
+	
+		
+			
 			?>
 
-	<div class="wrap-modal1 js-modal1 p-t-60 p-b-20">
+	<div class="wrap-modal1 js-modal1  p-t-60 p-b-20 ">
 		<div class="overlay-modal1 js-hide-modal1"></div>
 
 		<div class="container">
@@ -212,7 +218,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 					<div class="col-md-6 col-lg-5 p-b-30">
 						<div class="p-r-50 p-t-5 p-lr-0-lg">
 							<h4 class="mtext-105 cl2 js-name-detail p-b-14">
-								Lightweight Jacket
+							<?php echo $result['Product_Name']?>
 							</h4>
 
 							<span class="mtext-106 cl2">

@@ -270,7 +270,12 @@
     [ Show modal1 ]*/
     $('.js-show-modal1').on('click',function(e){
         e.preventDefault();
+       
+        // alert(id);
+        // console.log(id);
+
         $('.js-modal1').addClass('show-modal1');
+
     });
 
     $('.js-hide-modal1').on('click',function(){
