@@ -1,0 +1,45 @@
+.form-control:focus {
+    color: #757575;
+    background-color: #fff;
+    outline: 0;
+    box-shadow: none !important;
+    border-bottom: 1px solid #a8aaac !important;
+}
+textarea.form-control:focus{
+    border-color: #a8aaac !important;
+    border: 1px solid #a8aaac !important;
+}
+.dropdown-toggle::after {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-left: .255em;
+    vertical-align: .255em;
+    content: "";
+    border-top: .3em solid;
+    border-right: .3em solid transparent;
+    border-bottom: 0;
+    border-left: .3em solid transparent
+}
+tbody .description-Tabel{
+    width: inherit !important;
+      overflow: hidden; /* Extra content hide hoga */
+      display: -webkit-box; /* WebKit browsers ke liye */
+      -webkit-box-orient: vertical; /* Vertical alignment */
+      -webkit-line-clamp: 8; /* Max 8 lines tak text limit */
+      white-space: normal; /* Line breaks ko allow karna */
+      text-overflow: ellipsis; /* Overflow par '...' dikhana */
+      padding: 10px;
+}
+
+.no-webkit-clamp {
+    overflow-y: hidden; /* Y-axis scroll ko block karna */
+    max-height: 200px; /* Max height set karna */
+    position: relative;
+}
+.no-webkit-clamp::after {
+    content: "..."; /* Ellipsis effect */
+    position: absolute;
+    bottom: 0;
+    right: 10px;
+    background-color: white;
+}

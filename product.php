@@ -281,14 +281,14 @@ include("components/header.php");
 								<div class="block2">
 									<div class="block2-pic hov-img0">
 										<img src="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>" alt="IMG-PRODUCT">
-										<a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1<?php echo $product['Product_Id']?>">
+										<a href="#product<?php echo $product['Product_Id'] ?>" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1" id="<?php echo $product['Product_Id'] ?>">
 											Quick View
 										</a>
 									</div>
 
 									<div class="block2-txt flex-w flex-t p-t-14">
 										<div class="block2-txt-child1 flex-col-l ">
-											<a href="product-detail.php" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+											<a href="product-detail.php?proId=<?php echo $product['Product_Id'] ?>" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6 text-uppercase">
 												<?php echo $product["Product_Name"] ?>
 											</a>
 
@@ -322,15 +322,15 @@ include("components/header.php");
 										<img src="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>" alt="IMG-PRODUCT">
 
 	
-										<a href="?pID=<?php echo $product['Product_Id']?>" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1 mod<?php echo $product['Product_Id'] ?>">
+										<a href="#product<?php echo $product['Product_Id'] ?>" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1" id="<?php echo $product['Product_Id'] ?>">
 											Quick View
-					</a>
+										</a>
 					
 						</div>
 
 									<div class="block2-txt flex-w flex-t p-t-14">
 										<div class="block2-txt-child1 flex-col-l ">
-											<a href="product-detail.php" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+											<a href="product-detail.php?proId=<?php echo $product['Product_Id'] ?>" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6 text-uppercase">
 												<?php echo $product["Product_Name"] ?>
 											</a>
 

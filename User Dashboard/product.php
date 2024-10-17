@@ -5,6 +5,7 @@ include('components/header.php')
 <!-- Blank Start -->
 <div class="container-fluid pt-4 px-4">
                 <div class="row bg-light rounded mx-0">
+                <div class="d-flex col-lg-12 justify-content-end mt-3"><button type="button" name="" class="btn btn-primary me-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Add  Product Categories</button></div>
                     <div class="col-md-12 table-responsive">
                         <h3 class="px-3 py-4">Product Detail</h3>
                         <table class="table text-center table-bordered">
@@ -30,7 +31,7 @@ include('components/header.php')
                                         <th scope="row"><?php echo $proCate['Product_Id']?></th>
                                         <td><?php echo $proCate['Product_Name']?></td>
                                         <td><?php echo $proCate['Product_Price']?></td>
-                                        <td><?php echo $proCate['Product_Description']?></td>
+                                        <td class="d-inline-block description-Tabel no-webkit-clamp"><?php echo $proCate['Product_Description']?></td>
                                         <td><img src="<?php echo $Pro_ImageAddress.$proCate['Product_Image'] ?>" alt="<?php echo $proCate['Product_Name'] ?>" width="80"></td>
                                         <!-- <td><?php //echo $proCate['Product_CatId']?></td> -->
                                         <!-- <td><?php 
@@ -185,7 +186,6 @@ include('components/header.php')
 
             <!-- Blank End -->
 
-            <div class="d-flex col-lg-12 justify-content-end mt-3"><button type="button" name="" class="btn btn-primary me-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Add  Product Categories</button></div>
             
             <!--Add Product Category Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">

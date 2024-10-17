@@ -153,18 +153,21 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 	<!-- Modal1 -->
 	<?php
-	if(isset($_GET['pID'])){
-		$pid = $_GET['pID'];
-		$query = $run->prepare('select * from Products where Product_Id =:pid');
-$query->bindParam('pid',$pid);
-$query->execute();
-		$result = $query->fetch(PDO::FETCH_ASSOC);
-	
+	// if(isset($_GET['pID'])){
+		// $pid = $_GET['pID'];
+		// $query = $run->prepare('select * from Products where Product_Id =:pid');
+		// $query = $run->query('select * from Products');
+		// $query->bindParam('pid',$pid);
+		// $query->execute();
+		// $result = $query->fetchAll(PDO::FETCH_ASSOC);
+		// foreach($result as $product){
 		
-			
+			$query = $run->query('select * from Products');
+			$result = $query->fetchAll(PDO::FETCH_ASSOC);
+			foreach($result as $product){
 			?>
 
-	<div class="wrap-modal1 js-modal1  p-t-60 p-b-20 ">
+	<div class="wrap-modal1 js-modal1 p-t-60 p-b-20" id="product<?php echo $product['Product_Id'] ?>">
 		<div class="overlay-modal1 js-hide-modal1"></div>
 
 		<div class="container">
@@ -181,31 +184,31 @@ $query->execute();
 								<div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
 
 								<div class="slick3 gallery-lb">
-									<div class="item-slick3" data-thumb="images/product-detail-01.jpg">
-										<div class="wrap-pic-w pos-relative">
-											<img src="images/product-detail-01.jpg" alt="IMG-PRODUCT">
+									<div class="item-slick3" data-thumb="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>">
+										<div class="wrap-pic-w pos-relative1">
+											<img src="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>" alt="IMG-PRODUCT">
 
-											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="images/product-detail-01.jpg">
+											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>">
 												<i class="fa fa-expand"></i>
 											</a>
 										</div>
 									</div>
 
-									<div class="item-slick3" data-thumb="images/product-detail-02.jpg">
-										<div class="wrap-pic-w pos-relative">
-											<img src="images/product-detail-02.jpg" alt="IMG-PRODUCT">
+									<div class="item-slick3" data-thumb="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>">
+										<div class="wrap-pic-w pos-relative1">
+											<img src="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>" alt="IMG-PRODUCT">
 
-											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="images/product-detail-02.jpg">
+											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>">
 												<i class="fa fa-expand"></i>
 											</a>
 										</div>
 									</div>
 
-									<div class="item-slick3" data-thumb="images/product-detail-03.jpg">
-										<div class="wrap-pic-w pos-relative">
-											<img src="images/product-detail-03.jpg" alt="IMG-PRODUCT">
+									<div class="item-slick3" data-thumb="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>">
+										<div class="wrap-pic-w pos-relative1">
+											<img src="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>" alt="IMG-PRODUCT">
 
-											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="images/product-detail-03.jpg">
+											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>">
 												<i class="fa fa-expand"></i>
 											</a>
 										</div>
@@ -217,16 +220,16 @@ $query->execute();
 					
 					<div class="col-md-6 col-lg-5 p-b-30">
 						<div class="p-r-50 p-t-5 p-lr-0-lg">
-							<h4 class="mtext-105 cl2 js-name-detail p-b-14">
-							<?php echo $result['Product_Name']?>
+							<h4 class="mtext-105 cl2 js-name-detail p-b-14 text-uppercase">
+							<?php echo $product['Product_Name']?>
 							</h4>
 
 							<span class="mtext-106 cl2">
-								$58.79
+								$, <?php echo $product['Product_Price'] ?>
 							</span>
 
 							<p class="stext-102 cl3 p-t-23">
-								Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat ornare feugiat.
+								<?php echo $product['Product_Description'] ?>
 							</p>
 							
 							<!--  -->
@@ -319,7 +322,8 @@ $query->execute();
 	</div>
 
 	<?php
-		}
+}
+		// }
 		?>
 
 <!--===============================================================================================-->	
@@ -422,7 +426,7 @@ $query->execute();
 		});
 	</script>
 <!--===============================================================================================-->
-	<script src="js/main.js"></script>
+	<script src="js/webPanel.js"></script>
 	<!-- <script src="js/regex.js"></script> -->
 
 </body>

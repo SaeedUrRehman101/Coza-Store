@@ -38,7 +38,7 @@ if($_SESSION['UserRole'] != "Admin"){
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/userdashboard.css">
 </head>
 
 <body>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 13, 2024 at 05:38 PM
+-- Generation Time: Oct 17, 2024 at 07:24 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -45,7 +45,7 @@ CREATE TABLE `signin` (
 INSERT INTO `signin` (`userId`, `User_Name`, `User_Email`, `User_Phone`, `User_Password`, `User_Role`, `User_Image`, `User_Bio`) VALUES
 (63, 'Admin baloch', 'admin01@gmail.com', '12345678910', '76f3aec01a3254b252550eb11d178016431e8a11', 'Admin', 'Long Sleeve.jpg', 'Creativity Solves Everything.'),
 (64, 'Saeed Ur Rehman', 'saeedtutorial786@gmail.com', '2147483647', 'bf10b76af5d45838d3147aca1729938d218347e7', 'User', 'Null', 'Null'),
-(66, 'Admin Khan', 'admin001@gmail.com', '03094749930', '867890d9242834f375f524239976c7168cc3129c', 'Admin', 'WhatsApp Image 2024-10-02 at 11.28.57 PM.jpeg', 'Full Stack Web Developer'),
+(66, 'Admin Khan', 'admin001@gmail.com', '03094749930', 'ffe4d9629e3fae9fb9d60da82b17abd797d47532', 'Admin', 'WhatsApp Image 2024-10-02 at 11.28.57 PM.jpeg', 'Full Stack Web Developer'),
 (68, 'ali ', 'ali101@gmail.com', '2147483647', '651cba93d7646e8253bcd308b683d4fc91663c4d', 'User', 'Null', 'Null');
 
 --

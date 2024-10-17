@@ -1,0 +1,26 @@
+.block2{
+    height: 22vw !important;
+}
+.hov-img0 {
+    height: 80% !important;
+    & img{
+        /* height: 100% !important; */
+        padding: 2vw !important;
+        object-fit: cover !important;
+    }
+}
+.categories{
+    height: 25vw !important;
+}
+.block1{
+    height: 100% !important;
+
+    & img{
+        height: 100% !important;
+        object-fit: cover;
+    }
+}
+.pos-relative1 {
+    position: relative;
+    padding: 5vw 10vw 2vw 10vw !important;
+}

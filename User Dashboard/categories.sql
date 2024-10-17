@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 22, 2024 at 10:13 PM
+-- Generation Time: Oct 17, 2024 at 07:22 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,10 +38,10 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `Category_Name`, `Category_Image`) VALUES
-(4, 'Shirt Category', 'Long Sleeve 2.jpg'),
-(5, 'Shirt Category2', 'Long Sleeve.jpg'),
-(6, 'Mobiles Category', 'samsung_not20(2).jpg'),
-(7, 'Fashion', 'ANZZI2.jpg');
+(1, 'Gaming Accessories', 'accessories.png'),
+(2, 'Women\'s Fashion', 'image_7.jpg'),
+(3, 'Men\'s Fashion', 'mens.jpg'),
+(4, 'Baby Products', 'image_17.jpg');
 
 --
 -- Indexes for dumped tables
@@ -61,7 +61,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
