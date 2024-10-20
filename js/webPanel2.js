@@ -302,8 +302,56 @@ document.addEventListener('DOMContentLoaded',()=>{
     hidemodal.forEach((hidetrigger)=>{
         hidetrigger.addEventListener('click',(event)=>{
             let trrigerParent = event.target.closest('.js-modal1');
-            // console.log(trrigerParent);
+            console.log(trrigerParent);
+            // hidetrigger.classList.remove('show-modal1');
             trrigerParent && trrigerParent.classList.remove('show-modal1');
         })
     })
 })
+
+function tabContent(){
+let navLinks = document.querySelectorAll('.nav-link');
+let tabDives = document.querySelectorAll('.tab-pane');
+
+navLinks.forEach((links)=>{
+    links.addEventListener('click',(event)=>{
+        event.preventDefault();
+        navLinks.forEach((nav)=> nav.classList.remove('active'));
+        tabDives.forEach((tabPanes)=> tabPanes.classList.remove('show','active'));
+        links.classList.add('active');
+         let tabElement = document.querySelector(links.getAttribute('href')); //nav-link k href sy tab-pane ki id's to get kr rahy hai 
+        //  console.log(tabElement);
+         tabElement.classList.add('show','active');
+    })
+})
+
+}
+
+function popover(){
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl)
+    })
+    
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+};
+
+popover();
+tabContent();
+
+// Select the icon button and the options div
+const toggleButton = document.querySelector('.toggleOptions');
+const optionsDiv = document.querySelector('.options');
+
+// Add event listener to the icon button
+toggleButton.addEventListener('click', () => {
+    // Toggle the 'active' class on the options div
+    optionsDiv.classList.toggle('active');
+});
+
+
+
+

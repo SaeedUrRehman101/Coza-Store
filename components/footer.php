@@ -272,25 +272,42 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 									</div>
 								</div>
 
-								<div class="flex-w flex-r-m p-b-10">
-									<div class="size-204 flex-w flex-m respon6-next">
-										<div class="wrap-num-product flex-w m-r-20 m-tb-10">
-											<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-minus"></i>
+								<form method='post'>
+									<input type="hidden" name="proId" value="<?php echo $product['Product_Id'] ?>">
+									<input type="hidden" name="proName" value="<?php echo $product['Product_Name'] ?>">
+									<input type="hidden" name="proImg" value="<?php echo $product['Product_Image'] ?>">
+									<input type="hidden" name="proPrice" value="<?php echo $product['Product_Price'] ?>">
+									<div class="flex-w flex-r-m p-b-10">
+										<div class="size-204 flex-w flex-m respon6-next">
+											<div class="wrap-num-product flex-w m-r-20 m-tb-10">
+												<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+													<i class="fs-16 zmdi zmdi-minus"></i>
+												</div>
+
+												<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
+
+												<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+													<i class="fs-16 zmdi zmdi-plus"></i>
+												</div>
 											</div>
 
-											<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
-
-											<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-plus"></i>
-											</div>
+											<?php
+											if(!isset($_SESSION['Name'])){
+												?>
+												<button type="button" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-html="true" title="Alert! <a class='cl1' href='SignIn.php'>LogIn</a>" data-bs-content="Please First Login to Your Account.">Add to cart</button>
+												<?php
+											}
+											else{
+												?>
+												<button type='submit' name='addtoCart' class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+													Add to cart
+												</button>
+												<?php
+											}
+											?>
 										</div>
-
-										<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-											Add to cart
-										</button>
 									</div>
-								</div>	
+								</form>	
 							</div>
 
 							<!--  -->
@@ -331,8 +348,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <!--===============================================================================================-->
 	<script src="vendor/animsition/js/animsition.min.js"></script>
 <!--===============================================================================================-->
-	<script src="vendor/bootstrap/js/popper.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+	<!-- <script src="vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script> -->
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 <!--===============================================================================================-->
 	<script src="vendor/select2/select2.min.js"></script>
 	<script>
@@ -426,7 +445,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		});
 	</script>
 <!--===============================================================================================-->
-	<script src="js/webPanel.js"></script>
+	<script src="js/webPanel2.js"></script>
 	<!-- <script src="js/regex.js"></script> -->
 
 </body>

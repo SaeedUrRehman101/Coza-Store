@@ -67,13 +67,21 @@ include("components/header.php");
 				
 				<!-- Search product -->
 				<div class="dis-none panel-search w-full p-t-10 p-b-15">
+					<form method="Get">
 					<div class="bor8 dis-flex p-l-15">
-						<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+						<button type="submit" class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
 							<i class="zmdi zmdi-search"></i>
 						</button>
-
-						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search">
-					</div>	
+						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search"  value="<?php echo isset($_GET['search-product']) ? $_GET['search-product'] : ''; ?>">
+						<?php
+						if(isset($_GET['cateId'])){
+							?>
+							<input type="hidden" name="cateId" value="<?php echo isset($_GET['cateId']) ? $_GET['cateId'] : ''; ?>">
+							<?php
+						}
+						?>
+					</div>
+					</form>
 				</div>
 
 				<!-- Filter -->
@@ -274,92 +282,122 @@ include("components/header.php");
 					$query->bindParam('pid',$categoryId);
 					$query->execute();
 					$productdata = $query->fetchAll(PDO::FETCH_ASSOC);
-					foreach($productdata as $product){
-						?>
-							<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
-								<!-- Block2 -->
-								<div class="block2">
-									<div class="block2-pic hov-img0">
-										<img src="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>" alt="IMG-PRODUCT">
-										<a href="#product<?php echo $product['Product_Id'] ?>" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1" id="<?php echo $product['Product_Id'] ?>">
-											Quick View
-										</a>
-									</div>
-
-									<div class="block2-txt flex-w flex-t p-t-14">
-										<div class="block2-txt-child1 flex-col-l ">
-											<a href="product-detail.php?proId=<?php echo $product['Product_Id'] ?>" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6 text-uppercase">
-												<?php echo $product["Product_Name"] ?>
+					if(isset($_GET['search-product'])){
+						$categoryId = $_GET['cateId'];
+						$searchpro = strtoupper($_GET['search-product']);
+						$query = $run->prepare('select * from products where Product_CatId = :pid and (upper(Product_Name) like :search or upper(Product_Description) like :search)');
+						$searchTerm = "%" . $searchpro ." %";
+						$query->bindParam('pid',$categoryId);
+						$query->bindParam('search',$searchTerm);
+						$query->execute();
+						$productdata = $query->fetchAll(PDO::FETCH_ASSOC);
+					}
+					if($productdata){
+						foreach($productdata as $product){
+							?>
+								<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
+									<!-- Block2 -->
+									<div class="block2">
+										<div class="block2-pic hov-img0">
+											<img src="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>" alt="IMG-PRODUCT">
+											<a href="#product<?php echo $product['Product_Id'] ?>" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1" id="<?php echo $product['Product_Id'] ?>">
+												Quick View
 											</a>
-
-											<span class="stext-105 cl3">
-											$, <?php echo $product['Product_Price'] ?>
-											</span>
 										</div>
-
-										<div class="block2-txt-child2 flex-r p-t-3">
-											<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-												<img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-01.png" alt="ICON">
-												<img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-02.png" alt="ICON">
-											</a>
+	
+										<div class="block2-txt flex-w flex-t p-t-14">
+											<div class="block2-txt-child1 flex-col-l ">
+												<a href="product-detail.php?proId=<?php echo $product['Product_Id'] ?>" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6 text-uppercase">
+													<?php echo $product["Product_Name"] ?>
+												</a>
+	
+												<span class="stext-105 cl3">
+												$, <?php echo $product['Product_Price'] ?>
+												</span>
+											</div>
+	
+											<div class="block2-txt-child2 flex-r p-t-3">
+												<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+													<img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-01.png" alt="ICON">
+													<img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-02.png" alt="ICON">
+												</a>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						<?php
+							<?php
+						}
+					}
+					else{
+						echo "<div class='container col-sm-2 col-md-5 col-lg-10 isotope-item'>
+						<div class='stext-114 text-capitalize p-t-30 p-b-40 col-sm-5 col-lg-10'>No products found...</div>
+						<div class='search-error'>
+						<img src='images/light.png' class='col-sm-2 col-md-10 p-l-50' alt='IMG-PRODUCT'>;
+						</div>
+						</div>";
 					}
 				}
-				else{
+				if(!isset($_GET['cateId'])){
 					$query = $run->query('select * from products');
 					$productdata = $query->fetchAll(PDO::FETCH_ASSOC);
-					foreach($productdata as $product){
-			    
-						?>
-							<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item <?php echo $product['Product_CatId'] ?>">
-								<!-- Block2 -->
-								<div class="block2">
-									<div class="block2-pic hov-img0">
-										<img src="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>" alt="IMG-PRODUCT">
-
+					if(isset($_GET['search-product'])){
+						$searchpro = strtoupper($_GET['search-product']);
+						$query = $run->prepare('select * from products where upper(Product_Name) like :search or upper(Product_Description) like :search');
+						$searchTerm = "%" . $searchpro ." %";
+						$query->bindParam('search',$searchTerm);
+						$query->execute();
+						$productdata = $query->fetchAll(PDO::FETCH_ASSOC);
+					}
+					if($productdata){
+						foreach($productdata as $product){
+							?>
+								<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item <?php echo $product['Product_CatId'] ?>">
+									<!-- Block2 -->
+									<div class="block2">
+										<div class="block2-pic hov-img0">
+											<img src="<?php echo $Pro_ImageAddress.$product['Product_Image'] ?>" alt="IMG-PRODUCT">
 	
-										<a href="#product<?php echo $product['Product_Id'] ?>" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1" id="<?php echo $product['Product_Id'] ?>">
-											Quick View
-										</a>
-					
-						</div>
-
-									<div class="block2-txt flex-w flex-t p-t-14">
-										<div class="block2-txt-child1 flex-col-l ">
-											<a href="product-detail.php?proId=<?php echo $product['Product_Id'] ?>" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6 text-uppercase">
-												<?php echo $product["Product_Name"] ?>
+		
+											<a href="#product<?php echo $product['Product_Id'] ?>" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1" id="<?php echo $product['Product_Id'] ?>">
+												Quick View
 											</a>
-
-											<span class="stext-105 cl3">
-											$, <?php echo $product['Product_Price'] ?>
-											</span>
+						
 										</div>
-
-										<div class="block2-txt-child2 flex-r p-t-3">
-											<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-												<img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-01.png" alt="ICON">
-												<img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-02.png" alt="ICON">
-											</a>
+	
+										<div class="block2-txt flex-w flex-t p-t-14">
+											<div class="block2-txt-child1 flex-col-l ">
+												<a href="product-detail.php?proId=<?php echo $product['Product_Id'] ?>" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6 text-uppercase">
+													<?php echo $product["Product_Name"] ?>
+												</a>
+	
+												<span class="stext-105 cl3">
+												$, <?php echo $product['Product_Price'] ?>
+												</span>
+											</div>
+	
+											<div class="block2-txt-child2 flex-r p-t-3">
+												<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+													<img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-01.png" alt="ICON">
+													<img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-02.png" alt="ICON">
+												</a>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						<?php
+							<?php
+						}
+					}
+					else{
+						echo "<div class='container col-sm-2 col-md-5 col-lg-10 isotope-item'>
+						<div class='stext-114 text-capitalize p-t-30 p-b-40 col-sm-5 col-lg-10'>No products found...</div>
+						<div class='search-error'>
+						<img src='images/light.png' class='col-sm-2 col-md-10 p-l-50' alt='IMG-PRODUCT'>;
+						</div>
+						</div>";
 					}
 				}
 						?>
 
-			</div>
-
-			<!-- Load more -->
-			<div class="flex-c-m flex-w w-full p-t-45">
-				<a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
-					Load More
-				</a>
 			</div>
 		</div>
 	</div>

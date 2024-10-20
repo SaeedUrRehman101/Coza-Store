@@ -1,0 +1,84 @@
+a{
+    text-decoration: none !important;
+}
+.block2{
+    height: 22vw !important;
+}
+.hov-img0 {
+    height: 80% !important;
+    & img{
+        /* height: 100% !important; */
+        padding: 2vw !important;
+        object-fit: cover !important;
+    }
+}
+.categories{
+    height: 25vw !important;
+}
+.block1{
+    height: 100% !important;
+
+    & img{
+        height: 100% !important;
+        object-fit: cover;
+    }
+}
+.pos-relative1 {
+    position: relative;
+    padding: 1vw 5vw 2vw 5vw !important;
+}
+.stext-114{
+    font-size: 25px !important;
+    margin-inline: auto !important;
+}
+.search-error{
+    max-width: fit-content !important;
+    margin-inline: auto !important;
+}
+.popover{
+    z-index: 20000 !important;
+}
+.nav-tabs .nav-link{
+    border: none !important;
+    border-bottom: 1px solid transparent !important;
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
+    border-color: #797979 !important;
+}
+.tab01 .nav-link.active {
+    color: #333 !important;
+    border-color: #797979 !important;
+}
+.form-control{
+    color: #666 !important;
+}
+.reviewEditBtn{
+    cursor: pointer;
+}
+.reviewModal{
+    height: 5vw !important;
+    & a{
+        color: #6c7ae0;
+        font-weight: 500;
+    }
+}
+.btn.focus, .btn:focus{
+    box-shadow: none !important;
+}
+.options {
+    opacity: 0;
+   transition: all .5s linear;
+}
+.options.active {
+   opacity: 100;
+   transition: all .5s linear;
+}
+
+@media (min-width: 992px) and (max-width:1024px) {
+    .container, .container-lg, .container-md, .container-sm {
+        max-width: 1050px !important;
+    }
+    .logo{
+        margin-right: 20px !important;
+    }
+}
