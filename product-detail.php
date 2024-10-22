@@ -301,7 +301,7 @@ include("components/header.php");
 														if($review['User_Image'] == "Null"){
 															?>
 															<div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
-															<h1 class="bg-info" style="width : 70px !important; height : 70px !important; padding :5% 30%;">
+															<h1 style="width : 70px !important; height : 70px !important; padding :5% 30%;background-color:rgb(206 206 206) !important;">
 																<?php
 																$query = explode($review['User_Name'][0],$review['User_Name']);
 																echo strtoupper($review['User_Name'][0]);
@@ -400,7 +400,7 @@ include("components/header.php");
 																if($review['User_Image'] == "Null"){
 																	?>
 																	<div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
-																	<h1 class="bg-info" style="width : 70px !important; height : 70px !important; padding : 5% 30%;">
+																	<h1 style="width : 70px !important; height : 70px !important; padding :5% 30%;background-color:rgb(206 206 206) !important;">
 																		<?php
 																		$query = explode($review['User_Name'][0],$review['User_Name']);
 																		echo strtoupper($review['User_Name'][0]);
@@ -538,7 +538,7 @@ include("components/header.php");
 															if($review['User_Image'] == "Null"){
 																?>
 																<div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
-																<h1 class="bg-info" style="width : 70px !important; height : 70px !important; padding : 5% 30%;">
+																<h1 style="width : 70px !important; height : 70px !important; padding :5% 30%;background-color:rgb(206 206 206) !important;">
 																	<?php
 																	$query = explode($review['User_Name'][0],$review['User_Name']);
 																	echo strtoupper($review['User_Name'][0]);
