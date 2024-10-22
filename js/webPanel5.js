@@ -342,16 +342,61 @@ function popover(){
 popover();
 tabContent();
 
-// Select the icon button and the options div
-const toggleButton = document.querySelector('.toggleOptions');
-const optionsDiv = document.querySelector('.options');
+// Select all icon buttons
+const toggleButtons = document.querySelectorAll('.toggleOptions');
 
-// Add event listener to the icon button
-toggleButton.addEventListener('click', () => {
-    // Toggle the 'active' class on the options div
-    optionsDiv.classList.toggle('active');
+// Add event listener to each toggle button
+toggleButtons.forEach((toggleButton) => {
+    toggleButton.addEventListener('click', () => {
+        // Find the corresponding options div (the next sibling)
+        const optionsDiv = toggleButton.closest('.reviewModal').querySelector('.options');
+
+        // Toggle the visibility using opacity and visibility
+        if (optionsDiv.classList.contains('hidden')) {
+            optionsDiv.classList.remove('hidden');  // Show the options
+            optionsDiv.classList.add('visible');     // Make it visible
+        } else {
+            optionsDiv.classList.remove('visible');  // Hide the options
+            optionsDiv.classList.add('hidden');       // Make it hidden
+        }
+    });
 });
 
+
+
+
+
+// Star rating update functionality
+document.addEventListener('DOMContentLoaded', function () {
+    const starRatings = document.querySelectorAll('.wrap-rating');
+
+    starRatings.forEach((ratingContainer) => {
+        const stars = ratingContainer.querySelectorAll('.item-rating');
+
+        stars.forEach((star, index) => {
+            // console.log(star ,index)
+            star.addEventListener('click', () => {
+                // Update star rating value
+                // console.log(ratingContainer.parentElement); //parent ko search kiya or phir wha sy input ko target kiya
+                const starRatingValue = ratingContainer.parentElement.querySelector('.starRatingValue');
+                starRatingValue.value = index + 1; // +1 for 1-based index
+                // console.log(starRatingValue.value)
+
+                // Set the star visuals
+                stars.forEach((s, i) => {
+                    if (i <= index) {
+                        // console.log(i,index)
+                        s.classList.remove('zmdi-star-outline');
+                        s.classList.add('zmdi-star');
+                    } else {
+                        s.classList.remove('zmdi-star');
+                        s.classList.add('zmdi-star-outline');
+                    }
+                });
+            });
+        });
+    });
+});
 
 
 

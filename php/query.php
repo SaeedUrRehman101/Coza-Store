@@ -1,5 +1,6 @@
 <?php
 include("User Dashboard/php/connection.php");
+$userImage_Address = "User Dashboard/img/User/"; //User Image we got from signIn
 $Cate_ImageAddress='User Dashboard/img/category/';
 $Pro_ImageAddress='User Dashboard/img/products/';
 $error_email = $error_name = $error_Phone = '';
@@ -147,26 +148,42 @@ if(isset($_POST['signIn'])){
 }
 
             // <--------------------    ADD TO CART    --------------------> 
+// session_unset();
+// unset($_SESSION['cart']);
 
 if(isset($_POST['addtoCart'])){
    $proId = $_POST['proId'];
    $proName = $_POST['proName'];
    $proPrice = $_POST['proPrice'];
    $proImage = $_POST['proImg'];
-
+   $proQuan = $_POST['proQuantity'];
    if(isset($_SESSION['Name'])){
-    if(isset($_SESSION['cart'])){
-        echo "<script>alert('cart session already exist..')</script>";
-       }
-       else{
-        $_SESSION['cart'][0] = array("proId"=>$proId,"proName"=>$proName,"proPrice"=>$proPrice,"proImg"=>$proImage);
-        echo "<script>alert('Product is added into the cart...')</script>";
-       }
+        if(isset($_SESSION['cart'])){
+            $cartQuantity = false; //jb bi cart ki id match nhi kry gi neechy jo condition hai us k hisab sy to ye false hai isy !$cartQuantity jo hai wo true usy set kr dygi
+            foreach($_SESSION['cart'] as $keys=>$values){
+                if($values['proId'] == $proId){
+                    $cartQuantity = true;
+                    $_SESSION['cart'][$keys]['proQuantity'] = $values['proQuantity'] + $proQuan;
+                    echo "<script>alert('Just Cart Quantity is Updated..')</script>";
+                }
+            }
+            if(!$cartQuantity){ // cartQuantity true ho means oper cart false hai to usy true set kr dyga is not operator k thorugh or phir product cart mai add ho jay ga second ya soo on products;
+                $_SESSION['cart'][] = array("proId"=>$proId,"proName"=>$proName,"proPrice"=>$proPrice,"proImg"=>$proImage,"proQuantity"=>$proQuan);
+                echo "<script>alert('Product is added into the cart...')</script>";
+            }
+        }
+        else{
+            $_SESSION['cart'][0] = array("proId"=>$proId,"proName"=>$proName,"proPrice"=>$proPrice,"proImg"=>$proImage,"proQuantity"=>$proQuan);
+            echo "<script>alert('Product is added into the cart...')</script>";
+        }
    }
    else{
     echo "<script>alert('Somthing Went Wrong.')</script>";
    }
 }
+
+            // <--------------------    REVIEW WORK    --------------------> 
+
 
 $revImage_Address = 'images/review/';
 
@@ -174,6 +191,7 @@ if(isset($_POST['reviewBtn'])){
     $userId = $_POST['userId'];
     $proId = $_POST['proId'];
     $userRev = $_POST['userReview'];
+    $userRating = $_POST['starRating'];
     $revImg = $_FILES['reviewImage']['name'];
     $revTemName = $_FILES['reviewImage']['tmp_name'];
     $extension = pathinfo($revImg, PATHINFO_EXTENSION);
@@ -183,12 +201,13 @@ if(isset($_POST['reviewBtn'])){
         if (move_uploaded_file($revTemName, $filePath)) {
             // INSERT query without WHERE clause
             $query = $run->prepare(
-                'INSERT INTO userreview (user_review, user_Image, user_signId, review_ProId) 
-                 VALUES (:urev, :revImg, :userId, :revProId)'
+                'INSERT INTO userreview (user_review, user_Image, userRatings, user_signId, review_ProId) 
+                 VALUES (:urev, :revImg, :urat, :userId, :revProId)'
             );
 
             $query->bindParam('urev', $userRev);
             $query->bindParam('revImg', $revImg);
+            $query->bindParam('urat', $userRating);
             $query->bindParam('userId', $userId);
             $query->bindParam('revProId', $proId);
 
@@ -204,6 +223,7 @@ if(isset($_POST['updReview'])){
     $proId = $_POST['proId'];
     $revId = $_POST['reviewId'];
     $userRev = $_POST['userReview'];
+    $userRate = $_POST['starRating'];
     $revImg = $_FILES['reviewImage']['name'];
     $revImgChanged = !empty($revImg);
     if($revImgChanged){
@@ -212,9 +232,10 @@ if(isset($_POST['updReview'])){
         $filePath = $revImage_Address . $revImg;
         if($extension == 'jpg' || $extension == 'webp' || $extension == 'png' || $extension == 'png' || $extension == 'jpeg'){
             if(move_uploaded_file($revTemName,$filePath)){
-                $query= $run->prepare('update userreview set user_review = :urev , user_Image = :uImg where review_Id = :revId');
+                $query= $run->prepare('update userreview set user_review = :urev , user_Image = :uImg, userRatings= :urat where review_Id = :revId');
                 $query->bindParam('revId',$revId);
                 $query->bindParam('urev',$userRev);
+                $query->bindParam('urat',$userRate);
                 $query->bindParam('uImg',$revImg);
                 $query->execute();
                 echo "<script>alert('Review Updated Succesfully..')</script>";
@@ -222,9 +243,10 @@ if(isset($_POST['updReview'])){
         }
     }
     else{
-        $query = $run->prepare('update userreview set user_review = :urev where review_Id = :revId');
+        $query = $run->prepare('update userreview set user_review = :urev , userRatings= :urat where review_Id = :revId');
         $query->bindParam('revId',$revId);
         $query->bindParam('urev',$userRev);
+        $query->bindParam('urat',$userRate);
         $query->execute();
         echo "<script>alert('User Review Updated Succesfully..')</script>";
     }

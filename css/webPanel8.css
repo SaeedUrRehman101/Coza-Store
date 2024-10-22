@@ -66,14 +66,27 @@ a{
     box-shadow: none !important;
 }
 .options {
-    opacity: 0;
    transition: all .5s linear;
 }
-.options.active {
+/* .options.active {
    opacity: 100;
    transition: all .5s linear;
+} */
+.hidden {
+    opacity: 0;       
+    visibility: hidden; 
+    transition: opacity 0.3s ease; /* Transition effect */
 }
 
+.visible {
+    opacity: 1;       
+    visibility: visible; 
+}
+
+.size-207 .reviewImg {
+    width: 50px !important;
+    height: 100%;
+}
 @media (min-width: 992px) and (max-width:1024px) {
     .container, .container-lg, .container-md, .container-sm {
         max-width: 1050px !important;

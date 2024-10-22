@@ -277,15 +277,14 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 									<input type="hidden" name="proName" value="<?php echo $product['Product_Name'] ?>">
 									<input type="hidden" name="proImg" value="<?php echo $product['Product_Image'] ?>">
 									<input type="hidden" name="proPrice" value="<?php echo $product['Product_Price'] ?>">
+
 									<div class="flex-w flex-r-m p-b-10">
 										<div class="size-204 flex-w flex-m respon6-next">
 											<div class="wrap-num-product flex-w m-r-20 m-tb-10">
 												<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
 													<i class="fs-16 zmdi zmdi-minus"></i>
 												</div>
-
-												<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
-
+												<input class="mtext-104 cl3 txt-center num-product" type="number" name="proQuantity" value="1">
 												<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
 													<i class="fs-16 zmdi zmdi-plus"></i>
 												</div>
@@ -445,7 +444,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		});
 	</script>
 <!--===============================================================================================-->
-	<script src="js/webPanel2.js"></script>
+	<script src="js/webPanel5.js"></script>
 	<!-- <script src="js/regex.js"></script> -->
 
 </body>

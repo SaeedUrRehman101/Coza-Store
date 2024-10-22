@@ -229,7 +229,6 @@ if(isset($_GET['proCateDelid'])){
 
 // Admin Profile;-
 
-
 if(isset($_POST['updateUser'])){
     $id = $_POST['userId'];
     $name = $_POST['name'];

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 20, 2024 at 05:55 PM
+-- Generation Time: Oct 22, 2024 at 06:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -32,19 +32,19 @@ CREATE TABLE `userreview` (
   `user_review` varchar(1000) NOT NULL,
   `user_Image` varchar(50) NOT NULL,
   `user_signId` int(11) NOT NULL,
-  `review_ProId` int(11) DEFAULT NULL
+  `review_ProId` int(11) DEFAULT NULL,
+  `userRatings` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `userreview`
 --
 
-INSERT INTO `userreview` (`review_Id`, `user_review`, `user_Image`, `user_signId`, `review_ProId`) VALUES
-(3, 'sdffsdfdsf', 'image_6.jpg', 64, NULL),
-(6, 'wererdfgasdasd', 'image_12.jpg', 64, NULL),
-(7, 'Hi Brother it\'s a review message.', 'men.jpg', 64, NULL),
-(9, 'The T-shirts which I want It\'s same as I want .', 'image_11.jpg', 64, 12),
-(10, 'I am Admin ', 'mens.jpg', 66, 10);
+INSERT INTO `userreview` (`review_Id`, `user_review`, `user_Image`, `user_signId`, `review_ProId`, `userRatings`) VALUES
+(1, 'It\'s an amazing gadget & the graphics are also clear when we play games on it seem like we are in a real world.Thanks alot.', 'image_2.jpg', 64, 1, 3),
+(2, 'I like your designs & your shirts size is fit which I want.', 'image_12.jpg', 64, 9, 4),
+(3, 'I bought it for my baby It\'s so happy  every time his smile make me strong. Thanks alot.', 'image_19.jpg', 68, 20, 5),
+(4, 'Thanks alot I got same thing which you wrote in the description. ', 'image_4.jpg', 68, 1, 4);
 
 --
 -- Indexes for dumped tables
@@ -66,7 +66,7 @@ ALTER TABLE `userreview`
 -- AUTO_INCREMENT for table `userreview`
 --
 ALTER TABLE `userreview`
-  MODIFY `review_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `review_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
