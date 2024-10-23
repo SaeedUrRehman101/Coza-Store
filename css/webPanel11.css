@@ -68,6 +68,9 @@ a{
 .options {
    transition: all .5s linear;
 }
+.product-Detail .slick-slide{
+    height: auto !important;
+}
 /* .options.active {
    opacity: 100;
    transition: all .5s linear;
@@ -86,6 +89,13 @@ a{
 .size-207 .reviewImg {
     width: 50px !important;
     height: 100%;
+}
+.review_Date{
+    font-size: 14px !important;
+    width: 100%;
+    display: flex;
+    color: gray;
+    justify-content: end;
 }
 @media (min-width: 992px) and (max-width:1024px) {
     .container, .container-lg, .container-md, .container-sm {

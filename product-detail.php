@@ -289,7 +289,7 @@ include("components/header.php");
 									<div class="p-b-30 m-lr-15-sm">
 										<?php
 										if(!isset($_SESSION['Name'])){
-											$query = $run->prepare('select urev.*,sign.* from userreview urev inner join signin sign on urev.user_signId = sign.userId where review_ProId =:revProId');
+											$query = $run->prepare('select urev.*,sign.* from userreview urev inner join signin sign on urev.user_signId = sign.userId where review_ProId =:revProId ORDER BY review_Time DESC');
 											$query->bindParam('revProId',$Data['Product_Id']);
 											$query->execute();
 											$result= $query->fetchAll(PDO::FETCH_ASSOC);
@@ -297,6 +297,7 @@ include("components/header.php");
 												$starRating = $review['userRatings'];
 												?>
 												<div class="flex-w flex-t p-b-68">
+													<div class="review_Date"><?php echo timeAgo($review['review_Time']) ?></div>
 														<?php
 														if($review['User_Image'] == "Null"){
 															?>
@@ -385,7 +386,7 @@ include("components/header.php");
 										<!-- Review -->
 										<?php
 										if(isset($_SESSION['Name'])){
-											$query = $run->prepare('select urev.*,sign.* from userreview urev inner join signin sign on urev.user_signId = sign.userId where review_ProId =:rId');
+											$query = $run->prepare('select urev.*,sign.* from userreview urev inner join signin sign on urev.user_signId = sign.userId where review_ProId =:rId ORDER BY review_Time DESC');
 											// $query = $run->prepare('select * from userreview where review_ProId =:rId');
 											$query->bindParam('rId',$Data['Product_Id']);
 											$query->execute();
@@ -396,6 +397,7 @@ include("components/header.php");
 													if($review['user_signId'] == $_SESSION['Id']){
 														?>
 														<div class="flex-w flex-t p-b-68">
+														<div class="review_Date"><?php echo timeAgo($review['review_Time']) ?></div>
 																<?php
 																if($review['User_Image'] == "Null"){
 																	?>
@@ -534,6 +536,7 @@ include("components/header.php");
 													else{
 														?>
 														<div class="flex-w flex-t p-b-68">
+														<div class="review_Date"><?php echo timeAgo($review['review_Time']) ?></div>
 															<?php
 															if($review['User_Image'] == "Null"){
 																?>
@@ -607,11 +610,13 @@ include("components/header.php");
 														<div class="col-12 p-b-5">
 															<label class="stext-102 cl3" for="review">Write your Product review</label>
 															<textarea class="size-110 bor8 stext-102 cl2 p-lr-20 p-tb-10" id="review" name="userReview"></textarea>
+															<div id="fileHelpId" class="text-danger fw-medium"><?php echo $revError ?></div>
 														</div>
 														<div class="col-12 p-b-5 mt-4">
 															<div class="mb-3">
 																<label for="formFileMultiple" class="form-label stext-102 cl3">Pictures speak louder than words</label>
 																<input class="form-control stext-102 cl3" name='reviewImage' type="file" id="formFileMultiple" multiple>
+																<div id="fileHelpId" class="text-danger fw-medium"><?php echo $revImgError ?></div>
 															</div>
 														</div>
 													</div>
@@ -648,11 +653,14 @@ include("components/header.php");
 														<div class="col-12 p-b-5">
 															<label class="stext-102 cl3" for="review">Write your Product review</label>
 															<textarea class="size-110 bor8 stext-102 cl2 p-lr-20 p-tb-10" id="review" name="userReview"></textarea>
+															<div id="fileHelpId" class="text-danger fw-medium"><?php echo $revError ?></div>
 														</div>
 														<div class="col-12 p-b-5 mt-4">
 															<div class="mb-3">
 																<label for="formFileMultiple" class="form-label stext-102 cl3">Pictures speak louder than words</label>
 																<input class="form-control stext-102 cl3" name='reviewImage' type="file" id="formFileMultiple" multiple>
+																<div id="fileHelpId" class="text-danger fw-medium"><?php echo $revImgError ?></div>
+																
 															</div>
 														</div>
 													</div>
@@ -696,7 +704,7 @@ include("components/header.php");
 			</div>
 
 			<!-- Slide2 -->
-			<div class="wrap-slick2">
+			<div class="wrap-slick2 product-Detail">
 				<div class="slick2">
 <?php
 $query=$run->prepare('select * from Products where Product_CatId = :pId');

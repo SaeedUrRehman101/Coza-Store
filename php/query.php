@@ -182,41 +182,98 @@ if(isset($_POST['addtoCart'])){
    }
 }
 
-            // <--------------------    REVIEW WORK    --------------------> 
+// <------------------------ DELETE CART  ------------------------>
 
-
-$revImage_Address = 'images/review/';
-
-if(isset($_POST['reviewBtn'])){
-    $userId = $_POST['userId'];
-    $proId = $_POST['proId'];
-    $userRev = $_POST['userReview'];
-    $userRating = $_POST['starRating'];
-    $revImg = $_FILES['reviewImage']['name'];
-    $revTemName = $_FILES['reviewImage']['tmp_name'];
-    $extension = pathinfo($revImg, PATHINFO_EXTENSION);
-    $filePath = $revImage_Address . $revImg;
-
-    if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'webp' || $extension == 'png') {
-        if (move_uploaded_file($revTemName, $filePath)) {
-            // INSERT query without WHERE clause
-            $query = $run->prepare(
-                'INSERT INTO userreview (user_review, user_Image, userRatings, user_signId, review_ProId) 
-                 VALUES (:urev, :revImg, :urat, :userId, :revProId)'
-            );
-
-            $query->bindParam('urev', $userRev);
-            $query->bindParam('revImg', $revImg);
-            $query->bindParam('urat', $userRating);
-            $query->bindParam('userId', $userId);
-            $query->bindParam('revProId', $proId);
-
-            $query->execute();
-            echo '<script>alert("Review submitted successfully")</script>';
+if(isset($_GET['delCartId'])){
+    $cartId = $_GET['delCartId'];
+    foreach($_SESSION['cart'] as $keys => $values){
+        if($values['proId'] == $cartId){
+            unset($_SESSION['cart'][$keys]);
+            $_SESSION['cart'] = array_values($_SESSION['cart']);
+            echo "<script>alert('cart Deleted...')</script>";
         }
     }
 }
 
+
+            // <--------------------    REVIEW WORK    --------------------> 
+
+
+date_default_timezone_set('Asia/Karachi');
+
+function timeAgo($datetime) {
+    // DateTime object bana rahe hain review time ke liye
+    $reviewTime = new DateTime($datetime);
+    
+    // Current time ka DateTime object bana rahe hain
+    $currentTime = new DateTime();
+
+    // Time ka difference nikal rahe hain (interval)
+    $interval = $currentTime->diff($reviewTime);
+
+    // Minutes aur hours ka calculation
+    $minutes = $interval->i; // Interval se minutes
+    $hours = $interval->h + ($interval->d * 24); // Din ko hours mein convert kar rahe hain
+    $month = $interval->m;
+
+    if($month>0){
+        return $month . 'month' . ($month > 1 ? 's' : '') . 'ago';
+    }
+    if ($hours > 0) {
+        return $hours . 'h ago';
+    }
+    else {
+        return $minutes . 'm ago';
+    }
+}
+
+$revImage_Address = 'images/review/';
+$revError = $revImgError = '';
+
+if(isset($_POST['reviewBtn'])) {
+$userId = $_POST['userId'];
+$proId = $_POST['proId'];
+$userRev = $_POST['userReview'];
+$userRating = $_POST['starRating'];
+$revImg = $_FILES['reviewImage']['name'];
+$revTemName = $_FILES['reviewImage']['tmp_name'];
+$extension = pathinfo($revImg, PATHINFO_EXTENSION);
+$filePath = $revImage_Address . $revImg;
+
+if(empty($userRev)) {
+    $revError = "Please fill out this field.";
+}
+if(empty($revImg)) {
+    $revImgError = "Please select an Image.";
+}
+else if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'webp' || $extension == 'png') {
+    if (move_uploaded_file($revTemName, $filePath)) {
+        // Insert query with time
+        $query = $run->prepare(
+            'INSERT INTO userreview (user_review, user_Image, userRatings, user_signId, review_ProId, review_time) 
+                VALUES (:urev, :revImg, :urat, :userId, :revProId, NOW())'
+        );
+
+        $query->bindParam('urev', $userRev);
+        $query->bindParam('revImg', $revImg);
+        $query->bindParam('urat', $userRating);
+        $query->bindParam('userId', $userId);
+        $query->bindParam('revProId', $proId);
+
+        $query->execute();
+        echo '<script>alert("Review submitted successfully")</script>';
+    }
+    else {
+        echo '<script>alert("Only jpg, png, webp, or jpeg formats are allowed.")</script>';
+    }
+} 
+else {
+    echo '<script>alert("Review Upload failed.")</script>';
+}
+}
+            
+
+//UPDATE REVIEW;-
 
 if(isset($_POST['updReview'])){
     $userId = $_POST['userId'];
@@ -226,31 +283,44 @@ if(isset($_POST['updReview'])){
     $userRate = $_POST['starRating'];
     $revImg = $_FILES['reviewImage']['name'];
     $revImgChanged = !empty($revImg);
-    if($revImgChanged){
-        $revTemName = $_FILES['reviewImage']['tmp_name'];
-        $extension = pathinfo($revImg, PATHINFO_EXTENSION);
-        $filePath = $revImage_Address . $revImg;
-        if($extension == 'jpg' || $extension == 'webp' || $extension == 'png' || $extension == 'png' || $extension == 'jpeg'){
-            if(move_uploaded_file($revTemName,$filePath)){
-                $query= $run->prepare('update userreview set user_review = :urev , user_Image = :uImg, userRatings= :urat where review_Id = :revId');
-                $query->bindParam('revId',$revId);
-                $query->bindParam('urev',$userRev);
-                $query->bindParam('urat',$userRate);
-                $query->bindParam('uImg',$revImg);
-                $query->execute();
-                echo "<script>alert('Review Updated Succesfully..')</script>";
-            }
-        }
+
+    $currentrevQuery = $run->prepare('select user_review from userreview where review_Id = :revId');
+    $currentrevQuery->bindParam('revId',$revId);
+    $currentrevQuery->execute();
+    $currentreview = $currentrevQuery->fetch(PDO::FETCH_ASSOC);
+
+    if($userRev == $currentreview['user_review'] && (!$revImgChanged || $revImg == $currentreview['user_Image'])){
+        echo "<script>alert('You already set this data.')</script>";
     }
     else{
-        $query = $run->prepare('update userreview set user_review = :urev , userRatings= :urat where review_Id = :revId');
-        $query->bindParam('revId',$revId);
-        $query->bindParam('urev',$userRev);
-        $query->bindParam('urat',$userRate);
-        $query->execute();
-        echo "<script>alert('User Review Updated Succesfully..')</script>";
+        if($revImgChanged){
+            $revTemName = $_FILES['reviewImage']['tmp_name'];
+            $extension = pathinfo($revImg, PATHINFO_EXTENSION);
+            $filePath = $revImage_Address . $revImg;
+            if($extension == 'jpg' || $extension == 'webp' || $extension == 'png' || $extension == 'png' || $extension == 'jpeg'){
+                if(move_uploaded_file($revTemName,$filePath)){
+                    $query= $run->prepare('update userreview set user_review = :urev , user_Image = :uImg, userRatings= :urat where review_Id = :revId');
+                    $query->bindParam('revId',$revId);
+                    $query->bindParam('urev',$userRev);
+                    $query->bindParam('urat',$userRate);
+                    $query->bindParam('uImg',$revImg);
+                    $query->execute();
+                    echo "<script>alert('Review Updated Succesfully..')</script>";
+                }
+            }
+        }
+        else{
+            $query = $run->prepare('update userreview set user_review = :urev , userRatings= :urat where review_Id = :revId');
+            $query->bindParam('revId',$revId);
+            $query->bindParam('urev',$userRev);
+            $query->bindParam('urat',$userRate);
+            $query->execute();
+            echo "<script>alert('User Review Updated Succesfully..')</script>";
+        }
     }
 }
+
+//DELETE REVIEW;-
 
 if(isset($_POST['deletReview'])){
     $revId = $_POST['delrevId'];
