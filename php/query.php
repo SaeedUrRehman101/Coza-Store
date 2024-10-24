@@ -231,91 +231,114 @@ $revImage_Address = 'images/review/';
 $revError = $revImgError = '';
 
 if(isset($_POST['reviewBtn'])) {
-$userId = $_POST['userId'];
-$proId = $_POST['proId'];
-$userRev = $_POST['userReview'];
-$userRating = $_POST['starRating'];
-$revImg = $_FILES['reviewImage']['name'];
-$revTemName = $_FILES['reviewImage']['tmp_name'];
-$extension = pathinfo($revImg, PATHINFO_EXTENSION);
-$filePath = $revImage_Address . $revImg;
+    $userId = $_POST['userId'];
+    $proId = $_POST['proId'];
+    $userRev = $_POST['userReview'];
+    $userRating = $_POST['starRating'];
+    $revImg = $_FILES['reviewImage']['name']; // Array of image names
 
-if(empty($userRev)) {
-    $revError = "Please fill out this field.";
-}
-if(empty($revImg)) {
-    $revImgError = "Please select an Image.";
-}
-else if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'webp' || $extension == 'png') {
-    if (move_uploaded_file($revTemName, $filePath)) {
-        // Insert query with time
+    if(empty($userRev)) {
+        $revError = "Please fill out this field.";
+    }
+
+    if(empty($revImg[0])) { // Check if no image is selected
+        $revImgError = "Please select an Image.";
+    } 
+    else {
+        $uploadedImages = []; // Array to store uploaded image names
+
+        foreach($revImg as $keys => $ImageName) {
+            $revTemName = $_FILES['reviewImage']['tmp_name'][$keys]; // Temp name for each file
+            $extension = pathinfo($ImageName, PATHINFO_EXTENSION); // Get the file extension
+            $filePath = $revImage_Address . $ImageName; // Set the file path with original image name
+            
+            if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'webp' || $extension == 'png') {
+                if (move_uploaded_file($revTemName, $filePath)) {
+                    $uploadedImages[] = $ImageName; // Store the original image name in array
+                } else {
+                    echo '<script>alert("Image upload failed.")</script>';
+                }
+            } else {
+                echo '<script>alert("Only jpg, png, webp, or jpeg formats are allowed.")</script>';
+            }
+        }
+
+        // Implode the image names array into a comma-separated string
+        $imageString = implode(',', $uploadedImages);
+
         $query = $run->prepare(
             'INSERT INTO userreview (user_review, user_Image, userRatings, user_signId, review_ProId, review_time) 
                 VALUES (:urev, :revImg, :urat, :userId, :revProId, NOW())'
         );
 
-        $query->bindParam('urev', $userRev);
-        $query->bindParam('revImg', $revImg);
-        $query->bindParam('urat', $userRating);
-        $query->bindParam('userId', $userId);
-        $query->bindParam('revProId', $proId);
+        $query->bindParam(':urev', $userRev);
+        $query->bindParam(':revImg', $imageString); 
+        $query->bindParam(':urat', $userRating);
+        $query->bindParam(':userId', $userId);
+        $query->bindParam(':revProId', $proId);
 
         $query->execute();
         echo '<script>alert("Review submitted successfully")</script>';
     }
-    else {
-        echo '<script>alert("Only jpg, png, webp, or jpeg formats are allowed.")</script>';
-    }
-} 
-else {
-    echo '<script>alert("Review Upload failed.")</script>';
 }
-}
+
             
 
 //UPDATE REVIEW;-
 
-if(isset($_POST['updReview'])){
+if (isset($_POST['updReview'])) {
     $userId = $_POST['userId'];
     $proId = $_POST['proId'];
     $revId = $_POST['reviewId'];
     $userRev = $_POST['userReview'];
     $userRate = $_POST['starRating'];
-    $revImg = $_FILES['reviewImage']['name'];
+    $revImg = $_FILES['reviewImage']['name']; // Yeh hamesha array hoga
     $revImgChanged = !empty($revImg);
 
-    $currentrevQuery = $run->prepare('select user_review from userreview where review_Id = :revId');
-    $currentrevQuery->bindParam('revId',$revId);
+    $currentrevQuery = $run->prepare('SELECT user_review, user_Image, userRatings FROM userreview WHERE review_Id = :revId');
+    $currentrevQuery->bindParam('revId', $revId);
     $currentrevQuery->execute();
     $currentreview = $currentrevQuery->fetch(PDO::FETCH_ASSOC);
 
-    if($userRev == $currentreview['user_review'] && (!$revImgChanged || $revImg == $currentreview['user_Image'])){
+    if ($userRev == $currentreview['user_review'] && (!$revImgChanged || $revImg == $currentreview['user_Image']) && $userRate == $currentreview['userRatings']) {
         echo "<script>alert('You already set this data.')</script>";
-    }
-    else{
-        if($revImgChanged){
-            $revTemName = $_FILES['reviewImage']['tmp_name'];
-            $extension = pathinfo($revImg, PATHINFO_EXTENSION);
-            $filePath = $revImage_Address . $revImg;
-            if($extension == 'jpg' || $extension == 'webp' || $extension == 'png' || $extension == 'png' || $extension == 'jpeg'){
-                if(move_uploaded_file($revTemName,$filePath)){
-                    $query= $run->prepare('update userreview set user_review = :urev , user_Image = :uImg, userRatings= :urat where review_Id = :revId');
-                    $query->bindParam('revId',$revId);
-                    $query->bindParam('urev',$userRev);
-                    $query->bindParam('urat',$userRate);
-                    $query->bindParam('uImg',$revImg);
-                    $query->execute();
-                    echo "<script>alert('Review Updated Succesfully..')</script>";
+    } else {
+        if ($revImgChanged) {
+            $uploadedImages = []; // Initialize as an array
+            foreach ($_FILES['reviewImage']['name'] as $key => $ImageName) {
+                $revTemName = $_FILES['reviewImage']['tmp_name'][$key];
+                $extension = pathinfo($ImageName, PATHINFO_EXTENSION);
+                $filePath = $revImage_Address . $ImageName;
+
+                if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'webp' || $extension == 'png') {
+                    if (move_uploaded_file($revTemName, $filePath)) {
+                        $uploadedImages[] = $ImageName;
+                    }
                 }
             }
+
+            // Check if any images were uploaded before imploding
+            if (!empty($uploadedImages)) {
+                $imageString = implode(',', $uploadedImages); // Convert array to string
+                $query = $run->prepare('UPDATE userreview SET user_review = :urev, user_Image = :uImg, userRatings = :urat, review_Time = NOW() WHERE review_Id = :revId');
+                $query->bindParam('revId', $revId);
+                $query->bindParam('urev', $userRev);
+                $query->bindParam('urat', $userRate);
+                $query->bindParam('uImg', $imageString);
+                $query->execute();
+                echo "<script>alert('Review Updated Successfully..')</script>";
+            }
+            else {
+                echo "<script>alert('No images were uploaded.')</script>";
+            }
         }
-        else{
-            $query = $run->prepare('update userreview set user_review = :urev , userRatings= :urat where review_Id = :revId');
-            $query->bindParam('revId',$revId);
-            $query->bindParam('urev',$userRev);
-            $query->bindParam('urat',$userRate);
+        else {
+            $query = $run->prepare('UPDATE userreview SET user_review = :urev, userRatings = :urat WHERE review_Id = :revId');
+            $query->bindParam('revId', $revId);
+            $query->bindParam('urev', $userRev);
+            $query->bindParam('urat', $userRate);
             $query->execute();
-            echo "<script>alert('User Review Updated Succesfully..')</script>";
+            echo "<script>alert('User Review Updated Successfully..')</script>";
         }
     }
 }

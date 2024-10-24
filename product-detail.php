@@ -295,6 +295,8 @@ include("components/header.php");
 											$result= $query->fetchAll(PDO::FETCH_ASSOC);
 											foreach($result as $review){
 												$starRating = $review['userRatings'];
+												$ImageString = $review['user_Image'];
+												$ImagesArray = explode(',', $ImageString);
 												?>
 												<div class="flex-w flex-t p-b-68">
 													<div class="review_Date"><?php echo timeAgo($review['review_Time']) ?></div>
@@ -338,7 +340,13 @@ include("components/header.php");
 																</span>
 															</div>
 															<div class="size-207">
-																<img class="reviewImg" src="<?php echo $revImage_Address.$review['user_Image'] ?>" alt="AVATAR">
+																<?php
+																foreach($ImagesArray as $Images){
+																	?>
+																	<img class="reviewImg me-4" src="<?php echo $revImage_Address.$Images ?>" alt="AVATAR">
+																	<?php
+																}
+																?>
 															</div>
 															<p class="stext-102 cl6">
 															<?php echo $review['user_review'] ?>
@@ -393,7 +401,9 @@ include("components/header.php");
 											$result = $query->fetchAll(PDO::FETCH_ASSOC);
 											if($result){
 												foreach($result as $review){
-													$starRating = $review['userRatings']; 
+													$starRating = $review['userRatings'];
+													$ImageString = $review['user_Image'];
+													$imagesArray = explode(',', $ImageString);
 													if($review['user_signId'] == $_SESSION['Id']){
 														?>
 														<div class="flex-w flex-t p-b-68">
@@ -450,7 +460,15 @@ include("components/header.php");
 
 																</div>
 																<div class="size-207">
-																	<img class="reviewImg" src="<?php echo $revImage_Address.$review['user_Image'] ?>" alt="AVATAR">
+																	<!-- <img class="reviewImg me-4" src="<?php //echo $revImage_Address.$imagesArray[1]?>" alt="AVATAR"> -->
+																	<?php
+																	foreach($imagesArray as $Images){
+																		?>
+																		<img class="reviewImg me-4" src="<?php echo $revImage_Address.$Images
+																		 ?>" alt="AVATAR">
+																		<?php
+																	}
+																	?>
 																</div>
 																<p class="stext-102 cl6">
 																<?php echo $review['user_review'] ?>
@@ -497,8 +515,18 @@ include("components/header.php");
 																				<div class="col-12 p-b-5 mt-4">
 																					<div class="mb-3">
 																						<label for="formFileMultiple" class="form-label stext-102 cl3">Pictures speak louder than words</label>
-																						<input class="form-control stext-102 cl3" name='reviewImage' type="file" id="formFileMultiple" multiple>
-																						<img src="<?php echo $revImage_Address . $review['user_Image'] ?>" width="80" alt="">
+																						<input class="form-control stext-102 cl3" name='reviewImage[]' type="file" id="formFileMultiple" multiple>
+																						<?php
+																						if (is_array($imagesArray)) {
+																							foreach ($imagesArray as $Images) {
+																								?>
+																								<img src="<?php echo $revImage_Address . $Images ?>" width="80" alt="">
+																								<?php
+																							}
+																						} else {
+																							echo "<p>No images available.</p>";
+																						}
+																						?>
 																					</div>
 																				</div>
 																			</div>
@@ -576,7 +604,13 @@ include("components/header.php");
 																	</span>
 																</div>
 																<div class="size-207">
-																	<img class="reviewImg" src="<?php echo $revImage_Address.$review['user_Image'] ?>" alt="AVATAR">
+																	<?php
+																	foreach($imagesArray as $Images){
+																		?>
+																	<img class="reviewImg me-4" src="<?php echo $revImage_Address.$Images ?>" alt="AVATAR">
+																		<?php
+																	}
+																	?>
 																</div>
 																<p class="stext-102 cl6">
 																<?php echo $review['user_review'] ?>
@@ -615,7 +649,7 @@ include("components/header.php");
 														<div class="col-12 p-b-5 mt-4">
 															<div class="mb-3">
 																<label for="formFileMultiple" class="form-label stext-102 cl3">Pictures speak louder than words</label>
-																<input class="form-control stext-102 cl3" name='reviewImage' type="file" id="formFileMultiple" multiple>
+																<input class="form-control stext-102 cl3" name='reviewImage[]' type="file" id="formFileMultiple" multiple>
 																<div id="fileHelpId" class="text-danger fw-medium"><?php echo $revImgError ?></div>
 															</div>
 														</div>
