@@ -171,6 +171,12 @@ if(isset($_POST['addtoCart'])){
                 $_SESSION['cart'][] = array("proId"=>$proId,"proName"=>$proName,"proPrice"=>$proPrice,"proImg"=>$proImage,"proQuantity"=>$proQuan);
                 echo "<script>alert('Product is added into the cart...')</script>";
             }
+            // is trha bi kr skty hai
+            // if(!$cartQuantity){
+            //     $cartCount = count($_SESSION['cart']);
+            //     $_SESSION['cart'][$cartCount]=array("proId"=>$pId,"proName"=>$pName,"proPrice"=>$pPrice,"proQuantity"=>$pQuantity,"proImage"=>$pImage);
+            //     echo "<script>alert('product add into cart')</script>";
+            //  }
         }
         else{
             $_SESSION['cart'][0] = array("proId"=>$proId,"proName"=>$proName,"proPrice"=>$proPrice,"proImg"=>$proImage,"proQuantity"=>$proQuan);
@@ -215,9 +221,13 @@ function timeAgo($datetime) {
     $minutes = $interval->i; // Interval se minutes
     $hours = $interval->h + ($interval->d * 24); // Din ko hours mein convert kar rahe hain
     $month = $interval->m;
+    $day = $interval->d;
 
     if($month>0){
         return $month . 'month' . ($month > 1 ? 's' : '') . 'ago';
+    }
+    if($day > 0){
+        return $day . "d ago";
     }
     if ($hours > 0) {
         return $hours . 'h ago';
@@ -353,6 +363,46 @@ if(isset($_POST['deletReview'])){
     echo "<script>alert('Review Deleted Succesfully..')</script>";
 }
 
+
+// <----------------------------   DELIVERY INFORMATIOM   ---------------------------->
+
+if(isset($_POST['orderPlace'])){
+   $Id = $_SESSION['Id'];
+   $userName = $_POST['name'];
+   $userEmail = $_POST['email'];
+   $userPhone = $_POST['phone'];
+   $userAddress = $_POST['address'];
+   $itemCounts = count($_SESSION['cart']);
+   $proQuantities = 0;
+   $subTotal = 0;
+   function confirmationCode(){
+    $randomNum = rand(1,999999);
+    return $randomNum;
+   };
+   date_default_timezone_set("Asia/Karachi");
+   $currentTime = time();
+   $completeDate = date("D, M d, Y h:i A",$currentTime);
+   $date = date("D, M d, Y ",$currentTime);
+   $time = date("h:i A",strtotime($completeDate));
+   $confirmation = confirmationCode();
+   $proNames = [];
+
+   foreach($_SESSION['cart'] as $keys=> $values){
+    $proNames[] =$values['proName']; //invoice k liye yha names ko array mai collect kr layn gay
+    $proQuantities += $values['proQuantity'];
+    $subTotal += $values['proPrice']*$values['proQuantity']; //is trha write krna hai because jb hm $proQuantities ko agr yha likhy to wo 1 quantity zyada add krdyta hai;
+
+    $orderQuery = $run->prepare('INSERT INTO `orders`(`product_Id`, `product_Name`, `product_Price`, `product_Quantity`, `user_Id`, `user_Email`, `user_Address`, `order_Date`, `order_Time`, `user_Name`, `product_Image`, `user_Phone`, `Confirmation`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)');
+    $orderQuery->execute([$values['proId'],$values['proName'],$values['proPrice'],$values['proQuantity'],$Id,$userEmail,$userAddress,$date,$time,$userName,$values["proImg"],$userPhone,$confirmation]);
+
+   }
+
+   $allproNames = implode(',',$proNames);
+   $invoiceQuery = $run->prepare('INSERT INTO `invoice`(`product_Names`, `user_Id`, `totalProductsQuanity`, `totalAmount`, `date`, `time`, `confirmationId`, `totalItems`) VALUES(?,?,?,?,?,?,?,?)');
+   $invoiceQuery->execute([$allproNames,$Id,$proQuantities,$subTotal,$date,$time,$confirmation,$itemCounts]);
+   echo "<script>alert('Ordered Placed Successfully.')</script>";
+
+}
 
 
 ?>
