@@ -1,4 +1,17 @@
 <?php
+
+//Import PHPMailer classes into the global namespace
+//These must be at the top of your script, not inside a function
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+//Load Composer's autoloader
+require 'vendor/autoload.php';
+//Create an instance; passing `true` enables exceptions
+$mail = new PHPMailer(true);
+
+
 include("User Dashboard/php/connection.php");
 $userImage_Address = "User Dashboard/img/User/"; //User Image we got from signIn
 $Cate_ImageAddress='User Dashboard/img/category/';
@@ -366,43 +379,119 @@ if(isset($_POST['deletReview'])){
 
 // <----------------------------   DELIVERY INFORMATIOM   ---------------------------->
 
-if(isset($_POST['orderPlace'])){
-   $Id = $_SESSION['Id'];
-   $userName = $_POST['name'];
-   $userEmail = $_POST['email'];
-   $userPhone = $_POST['phone'];
-   $userAddress = $_POST['address'];
-   $itemCounts = count($_SESSION['cart']);
-   $proQuantities = 0;
-   $subTotal = 0;
-   function confirmationCode(){
-    $randomNum = rand(1,999999);
-    return $randomNum;
-   };
-   date_default_timezone_set("Asia/Karachi");
-   $currentTime = time();
-   $completeDate = date("D, M d, Y h:i A",$currentTime);
-   $date = date("D, M d, Y ",$currentTime);
-   $time = date("h:i A",strtotime($completeDate));
-   $confirmation = confirmationCode();
-   $proNames = [];
+if (isset($_POST['orderPlace'])) {
+    $Id = $_SESSION['Id'];
+    $userName = $_POST['name'];
+    $userEmail = $_POST['email'];
+    $userPhone = $_POST['phone'];
+    $userAddress = $_POST['address'];
+    $itemCounts = count($_SESSION['cart']);
+    $proQuantities = 0;
+    $subTotal = 0;
+    $imgUrl = 'http://localhost/PHP/Web%20Panel/User%20DashBoard/img/products/';
+    
+    function confirmationCode() {
+        $randomNum = rand(1, 999999);
+        return $randomNum;
+    }
+    
+    date_default_timezone_set("Asia/Karachi");
+    $currentTime = time();
+    $completeDate = date("D, M d, Y h:i A", $currentTime);
+    $date = date("D, M d, Y ", $currentTime);
+    $time = date("h:i A", strtotime($completeDate));
+    $nextDate = date("D, M d, Y ", strtotime('+5 days'));
+    $confirmation = confirmationCode();
+    $proNames = [];
+    $itemNumber = 1;
 
-   foreach($_SESSION['cart'] as $keys=> $values){
-    $proNames[] =$values['proName']; //invoice k liye yha names ko array mai collect kr layn gay
-    $proQuantities += $values['proQuantity'];
-    $subTotal += $values['proPrice']*$values['proQuantity']; //is trha write krna hai because jb hm $proQuantities ko agr yha likhy to wo 1 quantity zyada add krdyta hai;
+    // Email content header with center-aligned image
+    $emailBody = '<div style="text-align: center;">
+                    <img src="https://i.postimg.cc/xT74QnfK/Green-Minimalist-Online-Shop-Logo-Icon.png" width="200" height="200" alt="Store Icon" />
+                  </div>';
+    
+    // Package title and details
+    $emailBody .= '<div style="font-size: 20px; text-align: center; color:rgb(13, 205, 15);">Thanks for shopping with us!</div>';
+    $emailBody .= '<div style="padding-left:400px; padding-right:400px;">';
+    $emailBody .= '<div style="font-size: 18px; padding-top:30px;">Hi '.$userName.',</div>';
+    $emailBody .= '<div style="font-size: 18px; border-bottom:5px solid #ddd; padding-bottom:10px; padding-left:25px; padding-top:10px;">We received your Order Details on '.$date.' '.$time.' and you will be paying for this via Cash On Delivery. We are getting your order ready and will let you know once you confirm your Order.Your Confirmation Code is <b>'.$confirmation.'</b>. We wish you enjoy shopping with us and hope to see you again real soon!</div>';
+    $emailBody .= '</div>';
 
-    $orderQuery = $run->prepare('INSERT INTO `orders`(`product_Id`, `product_Name`, `product_Price`, `product_Quantity`, `user_Id`, `user_Email`, `user_Address`, `order_Date`, `order_Time`, `user_Name`, `product_Image`, `user_Phone`, `Confirmation`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)');
-    $orderQuery->execute([$values['proId'],$values['proName'],$values['proPrice'],$values['proQuantity'],$Id,$userEmail,$userAddress,$date,$time,$userName,$values["proImg"],$userPhone,$confirmation]);
+    // Loop through cart items
+    foreach ($_SESSION['cart'] as $keys => $values) {
+        $proNames[] = $values['proName'];
+        $proQuantities += $values['proQuantity'];
+        $subTotal += $values['proPrice'] * $values['proQuantity'];
 
-   }
+        // Insert order details into database
+        $orderQuery = $run->prepare('INSERT INTO `orders`(`product_Id`, `product_Name`, `product_Price`, `product_Quantity`, `user_Id`, `user_Email`, `user_Address`, `order_Date`, `order_Time`, `user_Name`, `product_Image`, `user_Phone`, `Confirmation`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)');
+        $orderQuery->execute([$values['proId'], $values['proName'], $values['proPrice'], $values['proQuantity'], $Id, $userEmail, $userAddress, $date, $time, $userName, $values["proImg"], $userPhone, $confirmation]);
 
-   $allproNames = implode(',',$proNames);
-   $invoiceQuery = $run->prepare('INSERT INTO `invoice`(`product_Names`, `user_Id`, `totalProductsQuanity`, `totalAmount`, `date`, `time`, `confirmationId`, `totalItems`) VALUES(?,?,?,?,?,?,?,?)');
-   $invoiceQuery->execute([$allproNames,$Id,$proQuantities,$subTotal,$date,$time,$confirmation,$itemCounts]);
-   echo "<script>alert('Ordered Placed Successfully.')</script>";
+        $emailBody .= '<div style="padding-left:400px; padding-right:400px;">';
+        $emailBody .= '<div style="font-size: 18px; font-weight: bold; margin-top: 20px; padding-bottom:10px;"><img src="https://i.postimg.cc/bJhBDTWL/Package.png" style="width: 20px; height: 20px;" alt="Package Icon" /> Package '.$itemNumber++.':</div>';
+        $emailBody .= '<div style="color: #666; padding-bottom:10px;">Sold by: Combine Communication</div>';
+        $emailBody .= '<div style="color: #666; padding-bottom:10px;">Estimated Delivery Dates: '.$date.' - '.$nextDate.'</div>';
+        $emailBody .= '</div>'; 
 
+        // Add product details to email body
+        $emailBody .= '<div style="padding-top: 10px; margin-top: 10px; padding-left:400px; padding-right:400px;">';
+
+        // Product Image
+        // $emailBody .= '<div style="text-align: center;">
+        //                 <img src="' . $imgUrl . $values["proImg"] . '" width="100" height="100" alt="Product Image" style="border: 1px solid #ddd; padding: 5px;"/>
+        //               </div>';
+
+        // Product Details
+        $emailBody .= '<div>
+                        <div style="font-size: 16px; font-weight: bold; padding-bottom:5px;">' . $values['proName'] . '</div>
+                        <div style="color: #666; padding-bottom:5px;">6GB + 128GB, 6.88 Inches IPS HD+ Display, Mediatek Helio G81 Ultra, 5160 mAh - 18W wired</div>
+                        <div style="font-size: 18px; color: #d9534f; padding-bottom:5px;">$. ' . number_format($values['proPrice'] * $values['proQuantity']) . '</div>
+                        <div style="border-bottom: 5px solid #ddd; padding-bottom:10px;">Quantity: ' . $values['proQuantity'] . '</div>
+                      </div>';
+
+        $emailBody .= '</div>';
+        // $itemNumber++;
+    }
+
+    $emailBody .= '<div style="padding-left:400px; padding-right:400px;">';
+    $emailBody .= '<div style="font-size: 18px; font-weight: bold; margin-top: 20px; color:rgb(13, 205, 15);">Total Amount: $. ' . number_format($subTotal) . '</div>';
+    $emailBody .= '</div>';
+
+    $allproNames = implode(',', $proNames);
+    $invoiceQuery = $run->prepare('INSERT INTO `invoice`(`product_Names`, `user_Id`, `totalProductsQuanity`, `totalAmount`, `date`, `time`, `confirmationId`, `totalItems`) VALUES(?,?,?,?,?,?,?,?)');
+    $invoiceQuery->execute([$allproNames, $Id, $proQuantities, $subTotal, $date, $time, $confirmation, $itemCounts]);
+
+    echo "<script>alert('Ordered Placed Successfully.')</script>";
+
+    try {
+        // Mail settings
+        $mail->SMTPDebug = SMTP::DEBUG_OFF;
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'surthunder01@gmail.com';
+        $mail->Password   = 'tusv nrzc erpu wesg';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port       = 465;
+
+        // Recipients
+        $mail->setFrom('surthunder01@gmail.com', 'Coza Store');
+        $mail->addAddress($userEmail, $userName);
+
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = 'Delivery Confirmation Code.';
+        $mail->Body    = $emailBody; // Assign dynamically generated HTML content to email body
+        $mail->AltBody = 'This is the plain text email for order confirmation';
+
+        $mail->send();
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    }
 }
+
+
+
 
 
 ?>
