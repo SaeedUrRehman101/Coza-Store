@@ -1,5 +1,5 @@
 <?php
-
+include("connection.php");
 //Import PHPMailer classes into the global namespace
 //These must be at the top of your script, not inside a function
 use PHPMailer\PHPMailer\PHPMailer;
@@ -7,12 +7,12 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 //Load Composer's autoloader
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 //Create an instance; passing `true` enables exceptions
 $mail = new PHPMailer(true);
 
 
-include("User Dashboard/php/connection.php");
+// include("User Dashboard/php/connection.php");
 $userImage_Address = "User Dashboard/img/User/"; //User Image we got from signIn
 $Cate_ImageAddress='User Dashboard/img/category/';
 $Pro_ImageAddress='User Dashboard/img/products/';
@@ -461,7 +461,8 @@ if (isset($_POST['orderPlace'])) {
     $invoiceQuery = $run->prepare('INSERT INTO `invoice`(`product_Names`, `user_Id`, `totalProductsQuanity`, `totalAmount`, `date`, `time`, `confirmationId`, `totalItems`) VALUES(?,?,?,?,?,?,?,?)');
     $invoiceQuery->execute([$allproNames, $Id, $proQuantities, $subTotal, $date, $time, $confirmation, $itemCounts]);
 
-    echo "<script>alert('Ordered Placed Successfully.')</script>";
+    // unset($_SESSION['cart']);
+    echo "<script>location.assign('shippingInfo.php');</script>";
 
     try {
         // Mail settings
@@ -492,7 +493,174 @@ if (isset($_POST['orderPlace'])) {
 
 
 
+// <----------------------------   SEARCH WORK   ---------------------------->
 
+if(isset($_POST['searchProduct'])){
+    $searchProduct = $_POST['searchProduct'];
+    $query = $run->prepare("select * from products where upper(Product_Name) like '%$searchProduct%' or upper(Product_Description) like '%$searchProduct%'");
+    $query->execute();
+    $result = $query->fetchAll(PDO::FETCH_ASSOC);
+    if($result){
+        foreach($result as $Products){
+            ?>
+            <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item <?php echo $Products['Product_CatId'] ?>">
+                    <!-- Block2 -->
+                    <div class="block2">
+                        <div class="block2-pic hov-img0">
+                            <img src="<?php echo $Pro_ImageAddress.$Products['Product_Image'] ?>" alt="IMG-PRODUCT">
+    
+    
+                            <a href="#product<?php echo $Products['Product_Id'] ?>" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1" id="<?php echo $Products['Product_Id'] ?>">
+                                Quick View
+                            </a>
+        
+                        </div>
+    
+                        <div class="block2-txt flex-w flex-t p-t-14">
+                            <div class="block2-txt-child1 flex-col-l ">
+                                <a href="product-detail.php?proId=<?php echo $Products['Product_Id'] ?>" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6 text-uppercase">
+                                    <?php echo $Products["Product_Name"] ?>
+                                </a>
+    
+                                <span class="stext-105 cl3">
+                                $, <?php echo $Products['Product_Price'] ?>
+                                </span>
+                            </div>
+    
+                            <div class="block2-txt-child2 flex-r p-t-3">
+                                <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                                    <img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-01.png" alt="ICON">
+                                    <img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-02.png" alt="ICON">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php
+        }
+    }
+    else{
+        echo "<div class='container col-sm-2 col-md-5 col-lg-10 isotope-item'>
+						<div class='stext-114 text-capitalize p-t-30 p-b-40 col-sm-5 col-lg-10 text-center'>No products found...</div>
+						<div class='search-error'>
+						<img src='images/light.png' class='col-sm-2 col-md-10 p-l-50' alt='IMG-PRODUCT'>;
+						</div>
+						</div>";
+    }
+    
+}
+
+// <----------------------------   Order Confirmation Code   ---------------------------->
+$confrimationCode_Error='';
+if (isset($_POST['confirmCode'])) {
+    $confirmCode = $_POST['confirmCode'];
+    $query = $run->prepare('SELECT * FROM invoice WHERE user_Id = :uId');
+    $query->bindParam('uId', $_SESSION['Id']);
+    $query->execute();
+    $result = $query->fetch(PDO::FETCH_ASSOC);
+    
+    // Check if confirmation code matches
+    if ($result && $result['confirmationId'] == $confirmCode) {
+        $confrimationCode_Error = 'Code is Correct';
+        $response = [
+            'message' => $confrimationCode_Error,
+            'success' => true
+        ];
+    } else {
+        $confrimationCode_Error = 'Code is Incorrect';
+        $response = [
+            'message' => $confrimationCode_Error,
+            'success' => false
+        ];
+    }
+    
+    // Send JSON response
+    echo json_encode($response);
+    exit;
+}
+
+if(isset($_POST['proceedButton'])){
+    unset($_SESSION['cart']);
+    echo "<script>alert('Ordered Placed Successfully.')
+    location.assign('index.php');
+    </script>";
+}
+
+// <----------------------------   USER PROFILE   ---------------------------->
+
+
+if(isset($_POST['updateUser'])){
+    $id = $_POST['userId'];
+    $name = $_POST['name'];
+    $phone = $_POST['phone'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $bio = $_POST['bio'];
+    $Img = $_FILES['img']['name'];
+    $userImg = !empty($Img);
+    $userCheckInput = $run->prepare('select User_Name, User_Phone , User_Password , User_Email , User_Bio , User_Image from signin where userId = :uid');
+    $userCheckInput->bindParam('uid',$id);
+    $userCheckInput->execute();
+    $checkInputs = $userCheckInput->fetch(PDO::FETCH_ASSOC);
+    if($checkInputs['User_Password'] == $password && $checkInputs['User_Email'] == $email && $checkInputs['User_Name']==$name && $checkInputs['User_Phone']==$phone && (!$userImg || $checkInputs['User_Image'] == $Img) && $checkInputs['User_Bio'] == $bio){
+        echo "<script>alert('You already set this Data.')</script>";
+    }
+    else{
+        if(!empty($name)){
+            $_SESSION['Name'] = $_POST['name'];
+        }
+        if(!empty($phone)){
+            $_SESSION['Phone'] = $_POST['phone'];
+            // print_r($_POST['phone']);
+        }
+        if(!empty($email)){
+            $_SESSION['Email'] = $_POST['email'];
+        }
+        if(!empty($password) && $password != $checkInputs['User_Password']){
+            $hashPassword = sha1($password);
+            $_SESSION['Password'] = $hashPassword;
+            // echo "SESSION Password: " . $_SESSION['Password'] . "<br>";
+            // echo "Input Password : " . $hashPassword . "<br>";
+        }
+        if(!empty($bio)){
+            $_SESSION['User_Bio'] = $bio;
+        }
+        if($userImg){
+            $_SESSION["User_Img"] = $Img;
+            $tempName = $_FILES['img']['tmp_name'];
+            $extension = pathinfo($Img,PATHINFO_EXTENSION);
+            $filePath = $userImage_Address.$Img;
+            if($extension == 'jpg' || $extension == 'webp' || $extension == 'png' || $extension == 'png' || $extension == 'jpeg'){
+                if(move_uploaded_file($tempName,$filePath)){
+                    $query = $run->prepare('update signin set User_Name = :un, User_Phone = :uph , User_Password = :upass , User_Email = :ue , User_Image = :uImg , User_Bio = :ub where userId = :uid');
+                    $query->bindParam('uid',$id);
+                    $query->bindParam('un',$_SESSION['Name']);
+                    $query->bindParam('uph',$_SESSION['Phone']);
+                    $query->bindParam('upass',$_SESSION['Password']);
+                    $query->bindParam('ue',$_SESSION['Email']);
+                    $query->bindParam('uImg',$_SESSION['User_Img']);
+                    $query->bindParam('ub',$_SESSION['User_Bio']);
+                    $query->execute();
+                    echo '<script>alert("Successfully Updated Your File.")</script>';
+                    // print_r($checkInputs['User_Password']);
+                    // print_r($_SESSION['Password']);
+                }
+            }
+        }
+        else{
+            $query = $run->prepare('update signin set User_Name = :un, User_Phone = :uph , User_Password = :upass , User_Email = :ue , User_Bio = :ub where userId = :uid');
+                    $query->bindParam('uid',$id);
+                    $query->bindParam('un',$_SESSION['Name']);
+                    $query->bindParam('uph',$_SESSION['Phone']);
+                    $query->bindParam('upass',$_SESSION['Password']);
+                    $query->bindParam('ue',$_SESSION['Email']);
+                    $query->bindParam('ub',$_SESSION['User_Bio']);
+                    $query->execute();
+                    echo '<script>alert("Successfully Updated Your File.")</script>';
+        }
+    }
+    
+}
 
 ?>
 

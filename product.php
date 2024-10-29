@@ -66,7 +66,7 @@ include("components/header.php");
 				</div>
 				
 				<!-- Search product -->
-				<div class="dis-none panel-search w-full p-t-10 p-b-15">
+				<!-- <div class="dis-none panel-search w-full p-t-10 p-b-15">
 					<form method="Get">
 					<div class="bor8 dis-flex p-l-15">
 						<button type="submit" class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
@@ -82,7 +82,22 @@ include("components/header.php");
 						?>
 					</div>
 					</form>
+				</div> -->
+
+				<div class="dis-none panel-search w-full p-t-10 p-b-15">
+					<!-- SECOND METHOD -->
+
+					<form method="dialog">
+						<div class="bor8 dis-flex p-l-15">
+							<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+								<i class="zmdi zmdi-search"></i>
+							</button>
+
+							<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="searchProduct" id="search" placeholder="Search">
+						</div>
+					</form>
 				</div>
+
 
 				<!-- Filter -->
 				<div class="dis-none panel-filter w-full p-t-10">
@@ -274,7 +289,7 @@ include("components/header.php");
 				</div>
 			</div>
 
-			<div class="row isotope-grid">
+			<div class="row isotope-grid" id="productData">
 				<?php
 				if(isset($_GET['cateId'])){
 					$categoryId = $_GET['cateId'];
@@ -340,14 +355,14 @@ include("components/header.php");
 				if(!isset($_GET['cateId'])){
 					$query = $run->query('select * from products');
 					$productdata = $query->fetchAll(PDO::FETCH_ASSOC);
-					if(isset($_GET['search-product'])){
-						$searchpro = strtoupper($_GET['search-product']);
-						$query = $run->prepare('select * from products where upper(Product_Name) like :search or upper(Product_Description) like :search');
-						$searchTerm = "%" . $searchpro ." %";
-						$query->bindParam('search',$searchTerm);
-						$query->execute();
-						$productdata = $query->fetchAll(PDO::FETCH_ASSOC);
-					}
+					// if(isset($_GET['search-product'])){
+						// 	$searchpro = strtoupper($_GET['search-product']);
+						// 	$query = $run->prepare('select * from products where upper(Product_Name) like :search or upper(Product_Description) like :search');
+						// 	$searchTerm = "%" . $searchpro ." %";
+						// 	$query->bindParam('search',$searchTerm);
+						// 	$query->execute();
+						// 	$productdata = $query->fetchAll(PDO::FETCH_ASSOC);
+					// }
 					if($productdata){
 						foreach($productdata as $product){
 							?>

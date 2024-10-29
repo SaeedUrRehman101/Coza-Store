@@ -22,7 +22,16 @@ include("components/header.php");
 			<div class="row">
 				<?php
 				if(!isset($_SESSION['cart'])){
-					echo "<p>No any Product added into the Cart.</p>";
+					?>
+					<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+					<div class='container col-sm-2 col-md-5 col-lg-10 isotope-item'>
+						<div class='stext-114 text-capitalize p-t-30 p-b-40 col-sm-5 col-lg-10 text-center'>No products found...</div>
+						<div class='search-error'>
+						<img src='images/light.png' class='col-sm-2 col-md-10 p-l-50' alt='IMG-PRODUCT'>;
+						</div>
+						</div>
+					</div>
+					<?php
 				}
 				else{
 					?>
@@ -163,9 +172,15 @@ include("components/header.php");
 							</div>
 						</div>
 
-						<button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+						<?php
+						if(isset($_SESSION['cart'])){
+							?>
+							<a href="Order.php" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
 							Proceed to Checkout
-						</button>
+							</a>
+							<?php
+						}
+						?>
 					</div>
 				</div>
 			</div>

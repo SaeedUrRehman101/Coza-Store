@@ -362,10 +362,6 @@ toggleButtons.forEach((toggleButton) => {
     });
 });
 
-
-
-
-
 // Star rating update functionality
 document.addEventListener('DOMContentLoaded', function () {
     const starRatings = document.querySelectorAll('.wrap-rating');
@@ -398,5 +394,60 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+$(document).ready(function(){
+    $('#search').on('keyup',function(){
+        let serach = $(this).val();
+        $.ajax({
+            url : 'php/query.php',
+            type : 'post',
+            data : {
+                "searchProduct" : serach
+            },
+            success : function(response){
+                // console.log(response);
+                $("#productData").html(response);
+            }
+        })
+    })
+});
+
+$(document).ready(function () {
+    $('#confirmCode').on('keyup', function () {
+        var confirmCode = $(this).val();
+        
+        // AJAX request to PHP for validation
+        $.ajax({
+            url: 'php/query.php',
+            type: 'POST',
+            data: { confirmCode: confirmCode },
+            dataType: 'json',
+            success: function (response) {
+                // Clear previous messages
+                // console.log(response)
+                $('#codeMessage').removeClass('correct-message incorrect-message').text('');
+
+                // Set the message and class based on response
+                if (response.success) {
+                    $('#codeMessage').text(response.message).addClass('correct-message'); // Correct message
+                    $('#proceedButton').removeAttr('disabled'); // Enable button
+                } else {
+                    $('#codeMessage').text(response.message).addClass('incorrect-message'); // Incorrect message
+                    $('#proceedButton').attr('disabled', 'disabled'); // Disable button
+                }
+            }
+        });
+    });
+});
 
 
+
+
+// function add(){
+//     let btn = document.querySelector('.confirmCodeBtn');
+//     btn.addEventListener('click',()=>{
+//         alert('Clicked')
+//     })
+// }
+
+
+// add()

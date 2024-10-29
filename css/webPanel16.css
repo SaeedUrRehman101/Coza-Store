@@ -103,6 +103,23 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+#proceedButton[disabled] {
+    cursor: no-drop; 
+    opacity: 0.5; 
+}
+.correct-message {
+    color: black; /* Code is Correct ka color black */
+}
+
+.incorrect-message {
+    color: red; /* Code is Incorrect ka color red */
+}
+.modal.show .modal-dialog{
+    margin-top: 4vw !important;
+}
+.z-index{
+    z-index: 9999 !important;
+}
 @media (min-width: 992px) and (max-width:1024px) {
     .container, .container-lg, .container-md, .container-sm {
         max-width: 1050px !important;

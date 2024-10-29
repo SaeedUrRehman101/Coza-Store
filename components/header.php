@@ -36,13 +36,19 @@ include("php/query.php");
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
-	<link rel="stylesheet" href="css/webPanel12.css">
+	<link rel="stylesheet" href="css/webPanel16.css">
+	<link rel="stylesheet" href="User Dashboard/css/userdashboard.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 	<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
 
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <!--===============================================================================================-->
+<style>
+	.bg-secondary-subtle {
+    background-color: rgb(244, 244, 244) !important;
+}
+</style>
 </head>
 <body class="animsition">
 	
@@ -164,17 +170,12 @@ include("php/query.php");
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="
 						<?php
 						$Quantity = 0;
-						if(isset($_SESSION['Name'])){
-							if(isset($_SESSION['cart'])){
-								foreach($_SESSION['cart'] as $keys=>$values){
-									$Quantity +=$values['proQuantity'];
-								}
-								echo $Quantity;
+						if(isset($_SESSION['Name']) && isset($_SESSION['cart']) && !empty($_SESSION['cart'])){
+							foreach($_SESSION['cart'] as $keys=>$values){
+								$Quantity +=$values['proQuantity'];
 							}
-						}
-						else{
-							echo $Quantity;
-						}
+						};
+						echo $Quantity;
 						?>
 						">
 							<i class="zmdi zmdi-shopping-cart"></i>
@@ -358,7 +359,7 @@ include("php/query.php");
 							View Cart
 						</a>
 
-						<a href="shoping-cart.html" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
+						<a href="Order.php" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
 							Check Out
 						</a>
 					</div>

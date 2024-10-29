@@ -444,7 +444,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		});
 	</script>
 <!--===============================================================================================-->
-	<script src="js/webPanel5.js"></script>
+	<script src="js/webPanel6.js"></script>
 	<!-- <script src="js/regex.js"></script> -->
 
 </body>
