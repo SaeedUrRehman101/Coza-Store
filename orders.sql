@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 26, 2024 at 06:41 PM
+-- Generation Time: Oct 31, 2024 at 07:59 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -49,8 +49,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`Order_Id`, `product_Id`, `product_Name`, `product_Price`, `product_Quantity`, `user_Id`, `user_Email`, `user_Address`, `order_Date`, `order_Time`, `user_Name`, `product_Image`, `user_Phone`, `Confirmation`) VALUES
-(1, 2, 'ASUS ROG Strix G17 (2022)', 895, 1, 68, 'ali101@gmail.com', 'H No 580,Sec B, St No 10,Akhtar Colony Karachi Pakistan', 'Sat, Oct 26, 2024 ', '09:38 PM', 'ali ', 'image_2.jpg', '2147483647', '79794'),
-(2, 9, 'Amazon Essentials Women', 27, 5, 68, 'ali101@gmail.com', 'H No 580,Sec B, St No 10,Akhtar Colony Karachi Pakistan', 'Sat, Oct 26, 2024 ', '09:38 PM', 'ali ', 'image_8.jpg', '2147483647', '79794');
+(48, 21, 'Fisher-Price Portable Bab', 40, 4, 71, 'surthunder01@gmail.com', 'karachi, Pakistan', 'Thu, Oct 31, 2024 ', '11:58 AM', 'Saeed Ur Rehman', 'image_18.jpg', '03153593379', '160509');
 
 --
 -- Indexes for dumped tables
@@ -70,7 +69,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `Order_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Order_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -170,7 +170,7 @@ include("php/query.php");
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="
 						<?php
 						$Quantity = 0;
-						if(isset($_SESSION['Name']) && isset($_SESSION['cart']) && !empty($_SESSION['cart'])){
+						if(isset($_SESSION['Name']) && isset($_SESSION['cart']) && is_array($_SESSION['cart']) && !empty($_SESSION['cart'])){
 							foreach($_SESSION['cart'] as $keys=>$values){
 								$Quantity +=$values['proQuantity'];
 							}
@@ -322,7 +322,7 @@ include("php/query.php");
 					<?php
 					$subTotal = 0;
 					if(isset($_SESSION['Name'])){
-						if(isset($_SESSION['cart'])){
+						if(isset($_SESSION['cart']) && is_array($_SESSION['cart'])){
 							foreach($_SESSION['cart'] as $keys => $values){
 								$subTotal += $values['proPrice'] * $values['proQuantity']
 								?>

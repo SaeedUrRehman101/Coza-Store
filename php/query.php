@@ -170,8 +170,11 @@ if(isset($_POST['addtoCart'])){
    $proPrice = $_POST['proPrice'];
    $proImage = $_POST['proImg'];
    $proQuan = $_POST['proQuantity'];
+   if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
+    $_SESSION['cart'] = array();
+    }
    if(isset($_SESSION['Name'])){
-        if(isset($_SESSION['cart'])){
+        if(isset($_SESSION['cart']) && is_array($_SESSION['cart'])){
             $cartQuantity = false; //jb bi cart ki id match nhi kry gi neechy jo condition hai us k hisab sy to ye false hai isy !$cartQuantity jo hai wo true usy set kr dygi
             foreach($_SESSION['cart'] as $keys=>$values){
                 if($values['proId'] == $proId){
@@ -385,7 +388,7 @@ if (isset($_POST['orderPlace'])) {
     $userEmail = $_POST['email'];
     $userPhone = $_POST['phone'];
     $userAddress = $_POST['address'];
-    $itemCounts = count($_SESSION['cart']);
+    $itemCounts = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
     $proQuantities = 0;
     $subTotal = 0;
     $imgUrl = 'http://localhost/PHP/Web%20Panel/User%20DashBoard/img/products/';
@@ -405,16 +408,17 @@ if (isset($_POST['orderPlace'])) {
     $proNames = [];
     $itemNumber = 1;
 
+    // <------//FOR EMAIL STYLEING AND ALSO WE SET THE MEDIA QUERIES IN OUR MIND SO I LIKE THAT K HUM PX,REM,EM KO NA USE KARAIN IT'S NOT WELL WORKING IN EMAIL ELSE YE BETTER HAI K HM "VW" IS TOO MUCH BETTER.------>
     // Email content header with center-aligned image
     $emailBody = '<div style="text-align: center;">
                     <img src="https://i.postimg.cc/xT74QnfK/Green-Minimalist-Online-Shop-Logo-Icon.png" width="200" height="200" alt="Store Icon" />
                   </div>';
     
     // Package title and details
-    $emailBody .= '<div style="font-size: 20px; text-align: center; color:rgb(13, 205, 15);">Thanks for shopping with us!</div>';
-    $emailBody .= '<div style="padding-left:400px; padding-right:400px;">';
-    $emailBody .= '<div style="font-size: 18px; padding-top:30px;">Hi '.$userName.',</div>';
-    $emailBody .= '<div style="font-size: 18px; border-bottom:5px solid #ddd; padding-bottom:10px; padding-left:25px; padding-top:10px;">We received your Order Details on '.$date.' '.$time.' and you will be paying for this via Cash On Delivery. We are getting your order ready and will let you know once you confirm your Order.Your Confirmation Code is <b>'.$confirmation.'</b>. We wish you enjoy shopping with us and hope to see you again real soon!</div>';
+    $emailBody .= '<div style="font-size: 20px; text-align: center; color:rgb(13, 205, 15); padding-left:15%;padding-right:15%">Thanks for shopping with us!</div>';
+    $emailBody .= '<div style="padding-left:15%; padding-right:15%;">';
+    $emailBody .= '<div style="font-size: .9rem; padding-top:30px;">Hi '.$userName.',</div>';
+    $emailBody .= '<div style="font-size: .9rem; border-bottom:5px solid #ddd; padding-bottom:10px; padding-top:10px; text-align:justify;">We received your Order Details on '.$date.' '.$time.' and you will be paying for this via Cash On Delivery. We are getting your order ready and will let you know once you confirm your Order.Your Confirmation Code is <b>'.$confirmation.'</b>. We wish you enjoy shopping with us and hope to see you again real soon!</div>';
     $emailBody .= '</div>';
 
     // Loop through cart items
@@ -427,14 +431,14 @@ if (isset($_POST['orderPlace'])) {
         $orderQuery = $run->prepare('INSERT INTO `orders`(`product_Id`, `product_Name`, `product_Price`, `product_Quantity`, `user_Id`, `user_Email`, `user_Address`, `order_Date`, `order_Time`, `user_Name`, `product_Image`, `user_Phone`, `Confirmation`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)');
         $orderQuery->execute([$values['proId'], $values['proName'], $values['proPrice'], $values['proQuantity'], $Id, $userEmail, $userAddress, $date, $time, $userName, $values["proImg"], $userPhone, $confirmation]);
 
-        $emailBody .= '<div style="padding-left:400px; padding-right:400px;">';
-        $emailBody .= '<div style="font-size: 18px; font-weight: bold; margin-top: 20px; padding-bottom:10px;"><img src="https://i.postimg.cc/bJhBDTWL/Package.png" style="width: 20px; height: 20px;" alt="Package Icon" /> Package '.$itemNumber++.':</div>';
+        $emailBody .= '<div style="padding-left:15%; padding-right:15%; color:black !important;">';
+        $emailBody .= '<div style="font-size: .9rem; margin-top: 20px; padding-bottom:10px;"><img src="https://i.postimg.cc/bJhBDTWL/Package.png" style="width: 20px; height: 20px;" alt="Package Icon" /> Package '.$itemNumber++.':</div>';
         $emailBody .= '<div style="color: #666; padding-bottom:10px;">Sold by: Combine Communication</div>';
         $emailBody .= '<div style="color: #666; padding-bottom:10px;">Estimated Delivery Dates: '.$date.' - '.$nextDate.'</div>';
         $emailBody .= '</div>'; 
 
         // Add product details to email body
-        $emailBody .= '<div style="padding-top: 10px; margin-top: 10px; padding-left:400px; padding-right:400px;">';
+        $emailBody .= '<div style="padding-top: 10px; margin-top: 10px; padding-left:15%; padding-right:15%;">';
 
         // Product Image
         // $emailBody .= '<div style="text-align: center;">
@@ -445,7 +449,7 @@ if (isset($_POST['orderPlace'])) {
         $emailBody .= '<div>
                         <div style="font-size: 16px; font-weight: bold; padding-bottom:5px;">' . $values['proName'] . '</div>
                         <div style="color: #666; padding-bottom:5px;">6GB + 128GB, 6.88 Inches IPS HD+ Display, Mediatek Helio G81 Ultra, 5160 mAh - 18W wired</div>
-                        <div style="font-size: 18px; color: #d9534f; padding-bottom:5px;">$. ' . number_format($values['proPrice'] * $values['proQuantity']) . '</div>
+                        <div style="font-size: .9rem; color: #d9534f; padding-bottom:5px;">$. ' . number_format($values['proPrice'] * $values['proQuantity']) . '</div>
                         <div style="border-bottom: 5px solid #ddd; padding-bottom:10px;">Quantity: ' . $values['proQuantity'] . '</div>
                       </div>';
 
@@ -453,15 +457,37 @@ if (isset($_POST['orderPlace'])) {
         // $itemNumber++;
     }
 
-    $emailBody .= '<div style="padding-left:400px; padding-right:400px;">';
-    $emailBody .= '<div style="font-size: 18px; font-weight: bold; margin-top: 20px; color:rgb(13, 205, 15);">Total Amount: $. ' . number_format($subTotal) . '</div>';
+    $emailBody .= '<div style="padding-left:15%; padding-right:15%;">';
+    // $emailBody .= '<div style="font-size: .9rem; margin-top: 20px; color:black; display: flex; flex-direction: row; justify-content: space-between;">Total Amount:<span style="font-size: .9rem; font-weight: bold; color:rgb(13, 205, 15);"> $. ' . number_format($subTotal) . '</span></div>';
+    $emailBody .= '<table cellpadding="0" cellspacing="0" style="width:100%; margin-top:.9rem;">';
+    $emailBody .= '<tbody>';
+    $emailBody .= '<tr>
+                        <td valign="top" style="width:69%; font-size: .9rem;  color:black;">Total Amount:</td>
+                        <td align="right" valign="top" colspan="1" style="font-size: .9rem; font-weight: bold; color:rgb(13, 205, 15);">$. ' . number_format($subTotal) . '</td>
+                    </tr>';
+    $emailBody .= '</tbody>';
+    $emailBody .= '</table>';
     $emailBody .= '</div>';
 
+    $order = $run->prepare('select * from orders where Confirmation = :cId');
+    $order->bindParam('cId',$confirmation);
+    $order->execute();
+    $result = $order->fetchAll(PDO::FETCH_ASSOC);
+    $orderIds = array();
+    foreach($result as $OrderID){
+        $orderIds[]= $OrderID['Order_Id'];
+    }
+    $orderIdstr = implode(',',$orderIds);
     $allproNames = implode(',', $proNames);
+    // print_r($orderIdstr);
     $invoiceQuery = $run->prepare('INSERT INTO `invoice`(`product_Names`, `user_Id`, `totalProductsQuanity`, `totalAmount`, `date`, `time`, `confirmationId`, `totalItems`) VALUES(?,?,?,?,?,?,?,?)');
     $invoiceQuery->execute([$allproNames, $Id, $proQuantities, $subTotal, $date, $time, $confirmation, $itemCounts]);
-
-    // unset($_SESSION['cart']);
+    $invoiceId = $run->lastInsertId();
+    foreach($result as $Order){
+        $orderId = $Order['Order_Id'];
+        $invoiceOrder = $run->prepare('INSERT INTO `invoice_orderid`(`invoice_OrderId`, `OrderId`) VALUES (?,?)');
+        $invoiceOrder->execute([$invoiceId,$orderId]);
+    }
     echo "<script>location.assign('shippingInfo.php');</script>";
 
     try {
@@ -551,33 +577,47 @@ if(isset($_POST['searchProduct'])){
 }
 
 // <----------------------------   Order Confirmation Code   ---------------------------->
-$confrimationCode_Error='';
+$confrimationCode_Error = '';
 if (isset($_POST['confirmCode'])) {
     $confirmCode = $_POST['confirmCode'];
-    $query = $run->prepare('SELECT * FROM invoice WHERE user_Id = :uId');
-    $query->bindParam('uId', $_SESSION['Id']);
-    $query->execute();
-    $result = $query->fetch(PDO::FETCH_ASSOC);
-    
-    // Check if confirmation code matches
-    if ($result && $result['confirmationId'] == $confirmCode) {
-        $confrimationCode_Error = 'Code is Correct';
-        $response = [
-            'message' => $confrimationCode_Error,
-            'success' => true
-        ];
-    } else {
-        $confrimationCode_Error = 'Code is Incorrect';
-        $response = [
-            'message' => $confrimationCode_Error,
-            'success' => false
-        ];
+    $invoiceId = $_POST['invoiceId']; // invoiceId ko POST se lene ka code
+
+    // Query to get order details using invoiceId and check confirmation code
+    $Orders = $run->prepare('SELECT ord.*, inOrd.* FROM invoice_orderid inOrd INNER JOIN orders ord ON inOrd.OrderId = ord.Order_Id WHERE inOrd.invoice_OrderId = :invId');
+    $Orders->bindParam(':invId', $invoiceId);
+
+    try {
+        if ($Orders->execute()) {
+            $OrdersCode = $Orders->fetch(PDO::FETCH_ASSOC);
+            
+            // Check if confirmation code matches
+            if ($OrdersCode && $OrdersCode['Confirmation'] == $confirmCode) {
+                $confrimationCode_Error = 'Code is Correct';
+                $response = [
+                    'message' => $confrimationCode_Error,
+                    'success' => true
+                ];
+    unset($_SESSION['cart']);
+            } else {
+                $confrimationCode_Error = 'Code is Incorrect';
+                $response = [
+                    'message' => $confrimationCode_Error,
+                    'success' => false
+                ];
+            }
+        }
+    } 
+    catch (PDOException $e) {
+        // Database query failed: show the error message
+        echo json_encode(['success' => false, 'message' => 'Database query failed: ' . $e->getMessage()]);
+        exit;
     }
     
-    // Send JSON response
+    // Send response
     echo json_encode($response);
     exit;
 }
+
 
 if(isset($_POST['proceedButton'])){
     unset($_SESSION['cart']);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 26, 2024 at 06:41 PM
+-- Generation Time: Oct 31, 2024 at 08:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -45,7 +45,7 @@ CREATE TABLE `invoice` (
 --
 
 INSERT INTO `invoice` (`invoice_Id`, `product_Names`, `user_Id`, `totalProductsQuanity`, `totalAmount`, `date`, `time`, `confirmationId`, `status`, `totalItems`) VALUES
-(1, 'ASUS ROG Strix G17 (2022),Amazon Essentials Women', 68, 6, 1030, 'Sat, Oct 26, 2024 ', '09:38 PM', '79794', 'pending', 2);
+(34, 'Fisher-Price Portable Bab', 71, 4, 160, 'Thu, Oct 31, 2024 ', '11:58 AM', '160509', 'pending', 1);
 
 --
 -- Indexes for dumped tables
@@ -65,7 +65,7 @@ ALTER TABLE `invoice`
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `invoice_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `invoice_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

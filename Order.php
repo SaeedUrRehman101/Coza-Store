@@ -22,8 +22,8 @@ include('components/header.php');
 						</h4>
 
 						<?php
-						$query = $run->prepare('select * from signin where User_Name = :uname');
-						$query->bindParam('uname', $_SESSION['Name']);
+						$query = $run->prepare('select * from signin where userId = :uId');
+						$query->bindParam('uId', $_SESSION['Id']);
 						$query->execute();
 						$User = $query->fetch(PDO::FETCH_ASSOC);
 						?>
