@@ -33,6 +33,18 @@ include("components/header.php");
 					</div>
 					<?php
 				}
+				if(count($_SESSION['cart']) === 0){
+					?>
+					<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+						<div class='container col-sm-2 col-md-5 col-lg-10 isotope-item'>
+							<div class='stext-114 text-capitalize p-t-30 p-b-40 col-sm-5 col-lg-10 text-center'>No products found...</div>
+							<div class='search-error'>
+								<img src='images/light.png' class='col-sm-2 col-md-10 p-l-50' alt='IMG-PRODUCT'>;
+							</div>
+						</div>
+					</div>
+					<?php
+				}
 				else{
 					?>
 					<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">

@@ -2,7 +2,7 @@ a{
     text-decoration: none !important;
 }
 .block2{
-    height: 22vw !important;
+    height: 22rem !important;
 }
 .hov-img0 {
     height: 80% !important;
@@ -56,7 +56,7 @@ a{
     cursor: pointer;
 }
 .reviewModal{
-    height: 5vw !important;
+    height: 5rem !important;
     & a{
         color: #6c7ae0;
         font-weight: 500;
@@ -119,6 +119,19 @@ input::-webkit-inner-spin-button {
 }
 .z-index{
     z-index: 9999 !important;
+}
+.myOrder .table-shopping-cart tr{
+    border-top: none !important; 
+    border-bottom: 1px dashed #d9d9d9 !important;
+}
+.shopingInfo .wrap-table-shopping-cart{
+    border-left: none !important;
+    border-right: none !important;
+}
+.myOrder .wrap-table-shopping-cart {
+    overflow: auto;
+    border-left: none !important;
+    border-right: none !important; 
 }
 @media (min-width: 992px) and (max-width:1024px) {
     .container, .container-lg, .container-md, .container-sm {

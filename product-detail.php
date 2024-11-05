@@ -159,7 +159,7 @@ include("components/header.php");
 										}
 										else{
 											?>
-											<button type='submit' name='addtoCart' class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+											<button name='addtoCart' class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
 												Add to cart
 											</button>
 											<?php
@@ -445,10 +445,10 @@ include("components/header.php");
 																		}
 																		?>
 																	</span>
-																	<div class="d-flex justify-content-start reviewModal align-items-baseline w-25">
+																	<div class="d-flex justify-content-start reviewModal align-items-baseline">
 																		<div class="border rounded-3 w-100 h-100 options hidden">
 																			<a href="#staticBackdrop<?php echo $review['review_Id'] ?>" class="border-dark-subtle h-50 w-100 d-flex justify-content-start align-items-center text-center ps-3" data-bs-toggle="modal"><i class="fa-regular fa-pen-to-square pe-2"></i> Edit</a>
-																			<a class="border-dark-subtle w-100 d-flex h-50 justify-content-start align-items-center text-center ps-3" href="#delReview<?php echo $review['review_Id'] ?>" data-bs-toggle="modal">
+																			<a class="border-dark-subtle w-100 d-flex h-50 justify-content-start align-items-center text-center ps-3 pe-2" href="#delReview<?php echo $review['review_Id'] ?>" data-bs-toggle="modal">
 																			<i class="fa-solid fa-trash pe-2"></i>Delete</a>
 																		</div>
 																		<div class="reviewEdit">

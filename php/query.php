@@ -180,12 +180,21 @@ if(isset($_POST['addtoCart'])){
                 if($values['proId'] == $proId){
                     $cartQuantity = true;
                     $_SESSION['cart'][$keys]['proQuantity'] = $values['proQuantity'] + $proQuan;
-                    echo "<script>alert('Just Cart Quantity is Updated..')</script>";
+                    echo '<script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                swal("'.$proName.'", "Product is added to cart!", "success");
+                            });
+                        </script>';
+
                 }
             }
             if(!$cartQuantity){ // cartQuantity true ho means oper cart false hai to usy true set kr dyga is not operator k thorugh or phir product cart mai add ho jay ga second ya soo on products;
                 $_SESSION['cart'][] = array("proId"=>$proId,"proName"=>$proName,"proPrice"=>$proPrice,"proImg"=>$proImage,"proQuantity"=>$proQuan);
-                echo "<script>alert('Product is added into the cart...')</script>";
+                echo '<script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                swal("'.$proName.'", "Product is added to cart!", "success");
+                            });
+                        </script>';
             }
             // is trha bi kr skty hai
             // if(!$cartQuantity){
@@ -196,7 +205,11 @@ if(isset($_POST['addtoCart'])){
         }
         else{
             $_SESSION['cart'][0] = array("proId"=>$proId,"proName"=>$proName,"proPrice"=>$proPrice,"proImg"=>$proImage,"proQuantity"=>$proQuan);
-            echo "<script>alert('Product is added into the cart...')</script>";
+            echo '<script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                swal("'.$proName.'", "Product is added to cart!", "success");
+                            });
+                        </script>';
         }
    }
    else{
@@ -210,9 +223,17 @@ if(isset($_GET['delCartId'])){
     $cartId = $_GET['delCartId'];
     foreach($_SESSION['cart'] as $keys => $values){
         if($values['proId'] == $cartId){
+            $proName = $values['proName'];
             unset($_SESSION['cart'][$keys]);
             $_SESSION['cart'] = array_values($_SESSION['cart']);
-            echo "<script>alert('cart Deleted...')</script>";
+            echo '<script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    swal("'.$proName.'", "Product is added to cart!", "success")
+                    .then(function(){
+                    location.assign("shoping-cart.php");
+                        })
+                });
+            </script>';
         }
     }
 }
@@ -318,34 +339,35 @@ if (isset($_POST['updReview'])) {
     $revId = $_POST['reviewId'];
     $userRev = $_POST['userReview'];
     $userRate = $_POST['starRating'];
-    $revImg = $_FILES['reviewImage']['name']; // Yeh hamesha array hoga
-    $revImgChanged = !empty($revImg);
+    $revImg = $_FILES['reviewImage']['name'];
+    
+    // Check if any file is actually uploaded
+    $revImgChanged = !empty($revImg[0]);
 
     $currentrevQuery = $run->prepare('SELECT user_review, user_Image, userRatings FROM userreview WHERE review_Id = :revId');
     $currentrevQuery->bindParam('revId', $revId);
     $currentrevQuery->execute();
     $currentreview = $currentrevQuery->fetch(PDO::FETCH_ASSOC);
 
-    if ($userRev == $currentreview['user_review'] && (!$revImgChanged || $revImg == $currentreview['user_Image']) && $userRate == $currentreview['userRatings']) {
+    if ($userRev == $currentreview['user_review'] && (!$revImgChanged || implode(',', $revImg) == $currentreview['user_Image']) && $userRate == $currentreview['userRatings']) {
         echo "<script>alert('You already set this data.')</script>";
     } else {
         if ($revImgChanged) {
-            $uploadedImages = []; // Initialize as an array
+            $uploadedImages = [];
             foreach ($_FILES['reviewImage']['name'] as $key => $ImageName) {
                 $revTemName = $_FILES['reviewImage']['tmp_name'][$key];
                 $extension = pathinfo($ImageName, PATHINFO_EXTENSION);
                 $filePath = $revImage_Address . $ImageName;
 
-                if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'webp' || $extension == 'png') {
+                if (in_array($extension, ['jpg', 'jpeg', 'webp', 'png'])) {
                     if (move_uploaded_file($revTemName, $filePath)) {
                         $uploadedImages[] = $ImageName;
                     }
                 }
             }
 
-            // Check if any images were uploaded before imploding
             if (!empty($uploadedImages)) {
-                $imageString = implode(',', $uploadedImages); // Convert array to string
+                $imageString = implode(',', $uploadedImages);
                 $query = $run->prepare('UPDATE userreview SET user_review = :urev, user_Image = :uImg, userRatings = :urat, review_Time = NOW() WHERE review_Id = :revId');
                 $query->bindParam('revId', $revId);
                 $query->bindParam('urev', $userRev);
@@ -353,13 +375,11 @@ if (isset($_POST['updReview'])) {
                 $query->bindParam('uImg', $imageString);
                 $query->execute();
                 echo "<script>alert('Review Updated Successfully..')</script>";
-            }
-            else {
+            } else {
                 echo "<script>alert('No images were uploaded.')</script>";
             }
-        }
-        else {
-            $query = $run->prepare('UPDATE userreview SET user_review = :urev, userRatings = :urat WHERE review_Id = :revId');
+        } else {
+            $query = $run->prepare('UPDATE userreview SET user_review = :urev, userRatings = :urat, review_Time = NOW() WHERE review_Id = :revId');
             $query->bindParam('revId', $revId);
             $query->bindParam('urev', $userRev);
             $query->bindParam('urat', $userRate);
@@ -368,6 +388,7 @@ if (isset($_POST['updReview'])) {
         }
     }
 }
+
 
 //DELETE REVIEW;-
 
@@ -408,7 +429,7 @@ if (isset($_POST['orderPlace'])) {
     $proNames = [];
     $itemNumber = 1;
 
-    // <------//FOR EMAIL STYLEING AND ALSO WE SET THE MEDIA QUERIES IN OUR MIND SO I LIKE THAT K HUM PX,REM,EM KO NA USE KARAIN IT'S NOT WELL WORKING IN EMAIL ELSE YE BETTER HAI K HM "VW" IS TOO MUCH BETTER.------>
+    // <------//FOR EMAIL STYLEING AND ALSO WE SET THE MEDIA QUERIES IN OUR MIND SO I LIKE THAT K HUM PX,VW,EM KO NA USE KARAIN IT'S NOT WELL WORKING IN EMAIL ELSE YE BETTER HAI K HM "REM" IS TOO MUCH BETTER.------>
     // Email content header with center-aligned image
     $emailBody = '<div style="text-align: center;">
                     <img src="https://i.postimg.cc/xT74QnfK/Green-Minimalist-Online-Shop-Logo-Icon.png" width="200" height="200" alt="Store Icon" />
@@ -473,11 +494,11 @@ if (isset($_POST['orderPlace'])) {
     $order->bindParam('cId',$confirmation);
     $order->execute();
     $result = $order->fetchAll(PDO::FETCH_ASSOC);
-    $orderIds = array();
-    foreach($result as $OrderID){
-        $orderIds[]= $OrderID['Order_Id'];
-    }
-    $orderIdstr = implode(',',$orderIds);
+    // $orderIds = array();
+    // foreach($result as $OrderID){
+    //     $orderIds[]= $OrderID['Order_Id'];
+    // }
+    // $orderIdstr = implode(',',$orderIds);
     $allproNames = implode(',', $proNames);
     // print_r($orderIdstr);
     $invoiceQuery = $run->prepare('INSERT INTO `invoice`(`product_Names`, `user_Id`, `totalProductsQuanity`, `totalAmount`, `date`, `time`, `confirmationId`, `totalItems`) VALUES(?,?,?,?,?,?,?,?)');
@@ -621,10 +642,120 @@ if (isset($_POST['confirmCode'])) {
 
 if(isset($_POST['proceedButton'])){
     unset($_SESSION['cart']);
+
     echo "<script>alert('Ordered Placed Successfully.')
     location.assign('index.php');
     </script>";
 }
+
+// <----------------------------   ORDER CANCEL FROM USER   ---------------------------->
+
+if(isset($_GET['delOrder'])){
+    $deleteOrder = $_GET['delOrder'];
+    $query = $run->prepare('select * from orders where Order_Id = :ordId');
+    $query->bindParam('ordId',$deleteOrder);
+    $query->execute();
+    $result = $query->fetch(PDO::FETCH_ASSOC);
+    $userEmail = $result['user_Email'];
+    $userName = $result['user_Name'];
+    $itemNumber = 1;
+                        // EMAIL WORK (PHP MAILER)
+    $emailBody = '<div style="text-align: center;">
+    <img src="https://i.postimg.cc/xT74QnfK/Green-Minimalist-Online-Shop-Logo-Icon.png" width="200" height="200" alt="Store Icon" />
+    </div>';
+
+    // Package title and details
+    $emailBody .= '<div style="font-size: 20px; text-align: center; color:rgb(13, 205, 15); padding-left:15%;padding-right:15%">Item(s) from your order has been successfully cancelled</div>';
+    $emailBody .= '<div style="padding-left:15%; padding-right:15%;">';
+    $emailBody .= '<div style="font-size: .9rem; padding-top:30px;">Dear '.$result['user_Name'].',</div>';
+    $emailBody .= '<div style="font-size: .9rem; padding-top:10px; text-align:justify;">We are glad to inform you that the item(s) from your Order <b> '.$result['product_Name'].' </b> has been cancelled upon your request.Rest assured, we have gone ahead and initiated the refund for your order according to our refund timeline and we will send you an email once the refund is issued.We hope that you will find other similar item(s) that would fit your needs and hope to see you shop with us again soon!</div>';
+    $emailBody .= '<div style="font-size: .9rem; padding-top:10px; text-align:justify;">Your sincerely,</div>';
+    $emailBody .= '<div style="font-size: .9rem; border-bottom:5px solid #ddd; padding-bottom:10px; padding-top:10px; text-align:justify;">Coza Depart.</div>';
+    $emailBody .= '</div>';
+    $emailBody .= '<div style="padding-left:15%; padding-right:15%; color:black !important;">';
+    $emailBody .= '<div style="font-size: .9rem; margin-top: 20px; padding-bottom:10px;"><img src="https://i.postimg.cc/bJhBDTWL/Package.png" style="width: 20px; height: 20px;" alt="Package Icon" /> Parcel '.$itemNumber.':</div>';
+    $emailBody .= '<div style="color: #666; padding-bottom:10px;">Sold by: Coza Store</div>';
+    $emailBody .= '<div style="color: #666; padding-bottom:10px;">Order Placed On: '.$result['order_Date'].'</div>';
+    $emailBody .= '</div>'; 
+
+    // Add product details to email body
+    $emailBody .= '<div style="padding-top: 10px; margin-top: 10px; padding-left:15%; padding-right:15%;">';
+    // Product Details
+    $emailBody .= '<div>
+                    <div style="font-size: 16px; font-weight: bold; padding-bottom:5px;">' . $result['product_Name'] . '</div>
+                    <div style="color: #666; padding-bottom:5px;">6GB + 128GB, 6.88 Inches IPS HD+ Display, Mediatek Helio G81 Ultra, 5160 mAh - 18W wired</div>
+                    <div style="font-size: .9rem; color: #d9534f; padding-bottom:5px;">$. ' . number_format($result['product_Price'] * $result['product_Quantity']) . '</div>
+                    <div style="border-bottom: 5px solid #ddd; padding-bottom:10px;">Quantity: ' . $result['product_Quantity'] . '</div>
+                    </div>';
+    $emailBody .= '</div>';
+    $emailBody .= '<div style="padding-left:15%; padding-right:15%;">';
+    $emailBody .= '<table cellpadding="0" cellspacing="0" style="width:100%; margin-top:.9rem;">';
+    $emailBody .= '<tbody>';
+    $emailBody .= '<tr>
+                        <td valign="top" style="width:69%; font-size: .9rem;  color:black;">Shipping option:</td>
+                        <td align="right" valign="top" colspan="1" style="font-size: .9rem; color:black;">STANDARD</td>
+                    </tr>';
+    $emailBody .= '<tr>
+                        <td valign="top" style="width:69%; font-size: .9rem;  color:black;">Paid by:</td>
+                        <td align="right" valign="top" colspan="1" style="font-size: .9rem; color:black;">Cash On Delivery</td>
+                    </tr>';
+    $emailBody .= '</tbody>';
+    $emailBody .= '</table>';
+    $emailBody .= '</div>';
+
+
+
+    $invoiceOrder = $run->prepare('delete from invoice_orderid where OrderId = :orderId');
+    $invoiceOrder->bindParam('orderId',$deleteOrder);
+    $invoiceOrder->execute();
+
+    $Order = $run->prepare('delete from orders where order_Id = :orderId');
+    $Order->bindParam('orderId',$deleteOrder);
+    $Order->execute();
+    echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            swal("'.$result['product_Name'].'", "Order Canceled Successfully!", "error")
+            .then(function() {
+                location.assign("myOrder.php");
+            });
+        });
+      </script>';
+
+    // echo "<script>alert('Order Canceled Successfully.')
+    // location.assign('myOrder.php')
+    // </script>";
+
+    try {
+        // Mail settings
+        $mail->SMTPDebug = SMTP::DEBUG_OFF;
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'surthunder01@gmail.com';
+        $mail->Password   = 'tusv nrzc erpu wesg';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port       = 465;
+
+        // Recipients
+        $mail->setFrom('surthunder01@gmail.com', 'Coza Store');
+        $mail->addAddress($userEmail, $userName);
+
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = 'Your cancellation request is successful.';
+        $mail->Body    = $emailBody; // Assign dynamically generated HTML content to email body
+        $mail->AltBody = 'This is the plain text email for order cancellation';
+
+        $mail->send();
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    }
+
+
+
+}
+
+
 
 // <----------------------------   USER PROFILE   ---------------------------->
 

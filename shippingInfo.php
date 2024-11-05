@@ -1,5 +1,9 @@
 <?php
 include('components/header.php');
+if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart']) || count($_SESSION['cart']) === 0) {
+    echo "<script>location.assign('index.php')</script>";
+}
+
 $query = $run->query('select * from invoice');
 $query->execute();
 $Invoice = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -25,7 +29,7 @@ $item=1;
 <div class="bg-secondary-subtle m-t-100 p-b-140">
     <div class="container">
         <div class="row p-t-20">
-            <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+            <div class="col-lg-11 col-xl-7 m-lr-auto m-b-50">
                     <div class="bor10 p-lr-20 p-t-10 p-b-40 m-r-40 m-lr-0-xl p-lr-15-sm rounded-3 bg-white">
                         <h4 class="stext-106 cl2 bor3 trans-04 m-r-32 m-tb-5">Shipping & Billing:</h4>
                         <div class="flex-w flex-t bor12 p-t-13 p-b-13 p-l-20">
@@ -58,22 +62,23 @@ $item=1;
                 <?php
                     foreach($getOrders as $Order){
                         ?>
-                        <div class="bor10 p-lr-20 m-t-30 p-t-10 p-b-40 m-r-40 m-lr-0-xl p-lr-15-sm rounded-3 bg-white">
+                        <div class="bor10 p-lr-10 m-t-30 p-t-10 p-b-40 m-r-40 m-lr-0-xl p-lr-15-sm rounded-3 bg-white shopingInfo">
                             <h4 class="stext-106 cl2 bor3 trans-04 m-r-32 m-tb-5">Package 1 of <?php echo $item++ ?></h4>
-                            <table class="table-shopping-cart">
-                                <tr class="table_row">
-                                    <td class="column-3 text-center">
-                                        <div class="how-itemcart1">
-                                            <img src="<?php echo $Pro_ImageAddress.$Order['product_Image'] ?>" alt="IMG">
-                                        </div>
-                                    </td>
-                                    <td class="column-3 text-center"><span class="stext-110 cl2"><?php echo $Order['product_Name'] ?></span></td>
-                                    <td class="column-3 text-center">Qty: <span class="stext-110 cl2"><?php echo $Order['product_Quantity'] ?></span></td>
-                                    <td class="column-3 text-center">Price: <span class="stext-110 cl2">$. <?php echo $Order['product_Price'] ?></span></td>
+                            <div class="wrap-table-shopping-cart">
+                                <table class="table-shopping-cart">
+                                    <tr class="table_row">
+                                        <td class="column-3 text-center">
+                                            <div class="how-itemcart1">
+                                                <img src="<?php echo $Pro_ImageAddress.$Order['product_Image'] ?>" alt="IMG">
+                                            </div>
+                                        </td>
+                                        <td class="column-3 text-center"><span class="stext-110 cl2"><?php echo $Order['product_Name'] ?></span></td>
+                                        <td class="column-3 text-center">Qty: <span class="stext-110 cl2"><?php echo $Order['product_Quantity'] ?></span></td>
+                                        <td class="column-3 text-center">Price: <span class="stext-110 cl2">$. <?php echo $Order['product_Price'] ?></span></td>
 
-                                </tr>
-                            </table>
-                            
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                         <?php
                     }
