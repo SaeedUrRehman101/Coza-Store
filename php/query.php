@@ -731,13 +731,13 @@ if(isset($_GET['delOrder'])){
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'surthunder01@gmail.com';
-        $mail->Password   = 'tusv nrzc erpu wesg';
+        $mail->Username   = '';
+        $mail->Password   = '';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
 
         // Recipients
-        $mail->setFrom('surthunder01@gmail.com', 'Coza Store');
+        $mail->setFrom('', 'Coza Store');
         $mail->addAddress($userEmail, $userName);
 
         // Content
